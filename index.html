@@ -31,8 +31,10 @@ canvas { display:block; } /* To remove the scrollbars */
         var ncols = 3;
         for (i = 1; i <= nrows; i++) { 
             for (z = 1; z <= ncols; z++) {
+                
                 place_img((i/ncols)*winW - (1/(nrows*2))*winW,
                            (z/nrows)*winH - (1/(ncols*2))*winH,50);
+                
                 drawCircle((i/ncols)*winW - (1/(nrows*2))*winW,
                            (z/nrows)*winH - (1/(ncols*2))*winH,50);
             }
@@ -43,7 +45,7 @@ canvas { display:block; } /* To remove the scrollbars */
       base_image = new Image();
       base_image.src = 'img/fish/monkfish.png';
       base_image.onload = function(){
-        context.drawImage(base_image, px_right, px_down);}
+        context.drawImage(base_image, px_right - (this.width/2), px_down - (this.height/2));}
     }
     
     function drawCircle(px_right,px_down,radius){
