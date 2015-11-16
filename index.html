@@ -33,42 +33,55 @@ canvas { display:block; } /* To remove the scrollbars */
         var nrows = 3;
         var ncols = 3;
         var radius = 60;
-        var collider_circles = new Array();
+        var collider_circles = [];
+        var pics = ["cod", "haddock", "halibut", "herring", "lesser.weaver", "mackeral",                                         "monkfish","salmon","scab"];
+        var counter = 0;
         for (i = 1; i <= nrows; i++) { 
             for (z = 1; z <= ncols; z++) {
                 var right = (i/ncols)*winW - (1/(nrows*2))*winW;
                 var down =  (z/nrows)*winH - (1/(ncols*2))*winH;
                 var the_point = new SAT.Vector(right,down);
-                drawCircle(right,down,radius); //so we can see the trigger areas
-                place_img(right,down);//place centered image
+                //drawCircle(right,down,radius); //so we can see the trigger areas
                 
                 //now we create an array of collider objects to trigger events from mouse or gaze
                 collider_circles.push(new SAT.Circle(the_point, radius));
                 var end_ix = collider_circles.length-1;
-//                console.log('testing:', SAT.pointInCircle(the_point, collider_circles[end_ix]));
-//                console.log('collider test:', collider_circles[end_ix]);
+                console.log('collider_circles.length:', i,z);  
+
+                //document.title = pics[counter];
+                place_img(right,down,pics[counter]); //place centered image
+
+                counter += 1;
             }
         }
         return collider_circles;
     }
     
     function update(collider_circles,mouse_point){//call this every few ms with setInterval 
+        var which_collided = -1;
         for(var key in collider_circles){               
-            console.log('cols:', mouse_point.x);
             var isColliding = SAT.pointInCircle(mouse_point, collider_circles[key]);
             if(isColliding){
-                console.log("Collision array number" + key + " ms.");
-                document.title = key;
-
-            }
-        } 
+                //console.log("Collision array number" + key + " ms.");
+                which_collided = key;
+            }             
+        }
+            //this changes the title to the number of the object that the mouse is on
+//        if(which_collided>-1){
+//           document.title = which_collided
+//        } else{
+//           document.title = "?"
+//        }
     }
 
-    function place_img(px_right,px_down){
+    function place_img(px_right,px_down,img_name){
       base_image = new Image();
-      base_image.src = 'img/fish/monkfish.png';
+      base_image.src = "img/fish/" + img_name + ".png";
+        
       base_image.onload = function(){
-        context.drawImage(base_image, px_right - (this.width/2), px_down - (this.height/2));}
+      context.drawImage(base_image, px_right - (this.width/2), px_down - (this.height/2));
+      context.fillText("img/fish/" + img_name + ".png",px_right,px_down);
+      }
     }
     
     function drawCircle(px_right,px_down,radius){
