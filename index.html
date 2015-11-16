@@ -22,9 +22,10 @@ canvas { display:block; } /* To remove the scrollbars */
              * Your drawings need to be inside this function otherwise they will be reset when 
              * you resize the browser window and the canvas goes will be cleared.
              */
-            drawStuff(); 
+            collider_circles = drawStuff(); //TODO: maybe make the collider circles in a seperate function?
+            return collider_circles; 
     }
-    resizeCanvas();
+    collider_circles = resizeCanvas();
 
     function drawStuff() { 
         var winW = window.innerWidth;
@@ -32,7 +33,7 @@ canvas { display:block; } /* To remove the scrollbars */
         var nrows = 3;
         var ncols = 3;
         var radius = 60;
-        var collider_circles = [];
+        var collider_circles = new Array();
         for (i = 1; i <= nrows; i++) { 
             for (z = 1; z <= ncols; z++) {
                 var right = (i/ncols)*winW - (1/(nrows*2))*winW;
@@ -44,11 +45,25 @@ canvas { display:block; } /* To remove the scrollbars */
                 //now we create an array of collider objects to trigger events from mouse or gaze
                 collider_circles.push(new SAT.Circle(the_point, radius));
                 var end_ix = collider_circles.length-1;
-                console.log('testing:', SAT.pointInCircle(the_point, collider_circles[end_ix]));
+//                console.log('testing:', SAT.pointInCircle(the_point, collider_circles[end_ix]));
+//                console.log('collider test:', collider_circles[end_ix]);
             }
         }
+        return collider_circles;
     }
     
+    function update(collider_circles,mouse_point){//call this every few ms with setInterval 
+        for(var key in collider_circles){               
+            console.log('cols:', mouse_point.x);
+            var isColliding = SAT.pointInCircle(mouse_point, collider_circles[key]);
+            if(isColliding){
+                console.log("Collision array number" + key + " ms.");
+                document.title = key;
+
+            }
+        } 
+    }
+
     function place_img(px_right,px_down){
       base_image = new Image();
       base_image.src = 'img/fish/monkfish.png';
@@ -64,6 +79,14 @@ canvas { display:block; } /* To remove the scrollbars */
         ctx.stroke();
     }
     
-    
+    mouse_point = new SAT.Vector(0, 0)
+
+    document.onmousemove = function(mouse){
+        mouse_point.x = mouse.clientX;
+        mouse_point.y = mouse.clientY;
+    }
+    setInterval(function() { update(collider_circles,mouse_point); },100)
+
 })();
+
 </script>
