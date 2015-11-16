@@ -1,4 +1,6 @@
 <canvas id="canvas"></canvas>
+<script src="SAT.js"></script>
+
 <style>
 * { margin:0; padding:0; } /* to remove the top and left whitespace */
 html, body { width:100%; height:100%; } /* just to be sure these are full screen*/
@@ -29,14 +31,20 @@ canvas { display:block; } /* To remove the scrollbars */
         var winH = window.innerHeight;
         var nrows = 3;
         var ncols = 3;
+        var radius = 60;
+        var collider_circles = [];
         for (i = 1; i <= nrows; i++) { 
             for (z = 1; z <= ncols; z++) {
+                var right = (i/ncols)*winW - (1/(nrows*2))*winW;
+                var down =  (z/nrows)*winH - (1/(ncols*2))*winH;
+                var the_point = new SAT.Vector(right,down);
+                drawCircle(right,down,radius); //so we can see the trigger areas
+                place_img(right,down);//place centered image
                 
-                place_img((i/ncols)*winW - (1/(nrows*2))*winW,
-                           (z/nrows)*winH - (1/(ncols*2))*winH,50);
-                
-                drawCircle((i/ncols)*winW - (1/(nrows*2))*winW,
-                           (z/nrows)*winH - (1/(ncols*2))*winH,50);
+                //now we create an array of collider objects to trigger events from mouse or gaze
+                collider_circles.push(new SAT.Circle(the_point, radius));
+                var end_ix = collider_circles.length-1;
+                console.log('testing:', SAT.pointInCircle(the_point, collider_circles[end_ix]));
             }
         }
     }
@@ -55,6 +63,7 @@ canvas { display:block; } /* To remove the scrollbars */
         ctx.arc(px_right,px_down,radius,0,2*Math.PI);
         ctx.stroke();
     }
+    
     
 })();
 </script>
