@@ -13,7 +13,8 @@ canvas { display:block; } /* To remove the scrollbars */
 		//DECLARE GLOBAL VARS
 		var canvas = document.getElementById('canvas'),context = canvas.getContext('2d');  //create the canvas
   	var collider_circles = [];  //create the array of colliders (area of interest/tigger zones)
-		var currRegion; //placeholder for the region the mouse/gaze is currently in on update 
+		var lastRegion = -1; //variable to hold the last region the mouse was in
+		var sounds = []; //array to store audio objects
 		mouse_point = new SAT.Vector(0, 0);  //declare a vector to contain the mouse coordinates
     
 		//DO THE MAIN STUFF
@@ -62,8 +63,8 @@ canvas { display:block; } /* To remove the scrollbars */
                 collider_circles.push(new SAT.Circle(the_point, radius));
                 var end_ix = collider_circles.length-1;
                 //console.log('collider_circles.length:', i,z);  
-                //document.title = pics[counter];
-                place_img(right,down,pics[counter],images[counter]); //place centered image
+
+                place_stimuli(right,down,pics[counter],images[counter],counter); //place centered image
                 counter += 1;
             }//end inner for
         }//end outer for
@@ -72,7 +73,7 @@ canvas { display:block; } /* To remove the scrollbars */
 		//----------------------
 		//CALLED ONCE TO LOAD EACH IMAGE (BY DRAWSTUFF)
 		//----------------------
-    function place_img(px_right,px_down,img_name,base_image)
+    function place_stimuli(px_right,px_down,img_name,base_image,counter)
 		{
       base_image = new Image();
       base_image.onload = function()
@@ -81,6 +82,9 @@ canvas { display:block; } /* To remove the scrollbars */
       	//context.fillText("img/fish/" + img_name + ".png",px_right,px_down);
       }
 			base_image.src = "img/fish/" + img_name + ".png";
+			
+			sounds[counter] = new Audio("img/fish/" + img_name + ".mp3");
+			
     }
 		
 		//----------------------
@@ -88,27 +92,31 @@ canvas { display:block; } /* To remove the scrollbars */
 		//----------------------
 		function update(collider_circles,mouse_point)
 		{
-        currRegion = -1;
-        for(var key in collider_circles)
-					{               
-            var isColliding = SAT.pointInCircle(mouse_point, collider_circles[key]);
-            if(isColliding)
+			var currRegion = -1; //reset the current region to null on each update
+			var triggered = 0; //reset the trigger to null on each update
+
+        for(var key in collider_circles)   //for each collider 
+				{                
+					var isColliding = SAT.pointInCircle(mouse_point, collider_circles[key]); //is the pointer in it?
+						if(isColliding) //if so
 						{
-               // console.log("Collision array number" + key + " ms.");
-                currRegion = key;
-            } 
-					 
-        	}
-         //this changes the title to the number of the object that the mouse is on
-       	 if(currRegion>-1)
-				 {
-					 document.title = currRegion;
+							currRegion = key; //set the current region = the collider number
+            }
+				}
+       	if(currRegion>-1) //if the current region is not whitespace
+				{
+					document.title = currRegion; //change doc title 
+				 	 if (currRegion != lastRegion)  //if the current region is DIFFERENT from the last region
+						 { sounds[currRegion].play(); //TRIGGER THE SOUND! YAY!
+							 triggered = 1; //note that it was triggered 
+						 }																
        	 } 
-				 else
+				 else //if the current region IS whitespace
 				 {
-          document.title = "?"
+          document.title = "?"  //change the title 
        	 }
- 				 console.log( Date.now(),",",mouse_point.x,",", mouse_point.y,",", parseInt(currRegion)); //LOG ALL DATA TO CONSOLE
+				 lastRegion = currRegion;  //prepare for next update by setting lastRegion = currentRegion
+ 				 console.log( Date.now(),",",mouse_point.x,",", mouse_point.y,",", parseInt(currRegion),",", triggered); //LOG ALL DATA TO CONSOLE
     }
 
     
