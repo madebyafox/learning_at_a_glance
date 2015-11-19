@@ -1,19 +1,4 @@
 
-//----------------------
-///CALLED EVERYTIME A KEY IS PRESSED 
-//----------------------
-function doKeyDown(e) 
-{
-	switch(e.keyCode)
-	{
-		case 13:
-			console.log("ENTER KEY PRESSED");		
-			saveData(data);			
-			break;
-	}
-}
-
-
 
 //----------------------
 ///CALLED ON ENTER KEY PRESS TO DOWLOAD CSV DATA 
