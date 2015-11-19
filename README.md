@@ -2,7 +2,7 @@
 Protoype gaze-contingent learning system
 
 
-experiment starts with 
+experiment starts with
 	1) index.html >> which displays an informed consent, as asks for a participant ID and condition number
 									 these are passed through the querystring to the...
 	2) fix.html page, which displays a fixation cross, and passes values through the query string to ...
