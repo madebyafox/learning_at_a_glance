@@ -1,0 +1,29 @@
+
+<canvas id="canvas"></canvas>
+<script src = "js/SAT.js"></script>
+<script src = "js/drawAssess.js"></script>
+<script src = "js/helpers.js"></script>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+
+<script>
+
+				var participant = getQueryVariable("participant");
+				var condition = parseInt(getQueryVariable("condition"));
+				var block = parseInt(getQueryVariable("block"));
+				var input= getQueryVariable("input");
+				var stimulus = getQueryVariable("stimulus"); 
+
+				console.log("ASSESSMENT");
+				console.log("participant:" + participant);
+				console.log("condition "+ condition);
+				console.log("block "+ block);
+				console.log("input "+ input);
+				console.log("stimulus "+ stimulus);
+			
+	 			
+  			drawAssess(stimulus,participant,condition,input,block);
+				
+</script>
+
+
+

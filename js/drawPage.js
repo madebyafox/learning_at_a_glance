@@ -1,5 +1,5 @@
 	
-function drawPage(stimulus)
+function drawPage(stimulus,participant,condition,input, block)
 {	
 		//-----------------DECLARE GLOBAL VARS-----------------
 		var canvas = document.getElementById('canvas'),context = canvas.getContext('2d');	//create the canvas
@@ -7,26 +7,30 @@ function drawPage(stimulus)
 		var lastRegion = -1; //variable to hold the last region the mouse was in
 		var pics = []; //array to store picture objects
 		var sounds = []; //array to store audio objects
-		var mouse_point = new SAT.Vector(0, 0);  //declare a vector to contain the mouse coordinates
 		var page = stimulus;
-    var data = [[]];
-		//-----------------DO THE MAIN STUFF-----------------
+		
+		//-----------------HOUSEKEEPING---------------------
 		window.addEventListener('resize', resizeCanvas, false);     // resize the canvas to fill browser window dynamically
 		window.addEventListener( "keydown", doKeyDown, true); //add keyboard key listener
     setInterval(function() { update(collider_circles,mouse_point); },100);  //set the logging interval
-    document.onmousemove = function(mouse) //define what happens when the mouse moves
+    
+		//-----------------SETUP MOUSE STUFF-----------------
+		var mouse_point = new SAT.Vector(0, 0);  //declare a vector to contain the mouse coordinates
+		document.onmousemove = function(mouse) //define what happens when the mouse moves
 		{
         mouse_point.x = mouse.clientX;
         mouse_point.y = mouse.clientY;
-    }
-		drawStuff(); //draw the stimuli to the canvas
+    }		
 		
-		
-		var titles = ["timestamp", "xmousex","ymousey","region","triggered"];
+		//-----------------SETUP DATA STUFF-----------------
+    var data = [[]];
+		var titles = ["participant","condition","block","input","stimulus","timestamp", "xmousex","ymousey","region","triggered"];
 		data.push(titles);
 		
+		//#TODO: does anything in this file need to change for mouse vs. gaze??
 		
-		
+		//-----------------NOW DRAW STUFF----------------
+		drawStuff(); //draw the stimuli to the canvas
 		
 		
 		
@@ -143,8 +147,7 @@ function drawPage(stimulus)
           document.title = "?"  //change the title 
        	 }
 				 lastRegion = currRegion;  //prepare for next update by setting lastRegion = currentRegion
- 				// console.log( Date.now(),",",mouse_point.x,",", mouse_point.y,",", parseInt(currRegion),",", triggered); //LOG ALL DATA TO CONSOLE
-				 var row = [Date.now(),mouse_point.x,mouse_point.y,parseInt(currRegion),triggered];
+				 var row = [participant,condition,block,input,stimulus,Date.now(),mouse_point.x,mouse_point.y,parseInt(currRegion),triggered];
 				 console.log(row);
 				 data.push(row);
     }
@@ -157,8 +160,9 @@ function drawPage(stimulus)
 			switch(e.keyCode)
 			{
 				case 13:
-					console.log("ENTER KEY PRESSED");		
+					//console.log("ENTER KEY PRESSED");	
 					saveData(data);			
+					window.location.href = "assess.html?participant="+participant+"&condition="+condition+"&block="+block+"&input="+input+"&stimulus="+stimulus;
 					break;
 			}
 		}
