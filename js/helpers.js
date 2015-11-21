@@ -1,10 +1,7 @@
-
-
 //----------------------
 ///CALLED ON ENTER KEY PRESS TO DOWLOAD CSV DATA 
 //----------------------
-function saveData(data)
-{
+function saveData(data){
 	var csvContent = "data:text/csv;charset=utf-8,";
 	data.forEach(function(infoArray, index){
 
@@ -21,12 +18,10 @@ function saveData(data)
 
 }
 
-
 //----------------------
 ///CALLED MANY PAGES TO PARSE QUERY STRING
 //----------------------
-function getQueryVariable(variable)
-{
+function getQueryVariable(variable){
        var query = window.location.search.substring(1);
        var vars = query.split("&");
        for (var i=0;i<vars.length;i++) {
@@ -34,4 +29,23 @@ function getQueryVariable(variable)
                if(pair[0] == variable){return pair[1];}
        }
        return(false);
+}
+
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex ;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
 }
