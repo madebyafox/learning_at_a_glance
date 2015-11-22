@@ -29,7 +29,7 @@ function drawAssess(stimulus, participant, condition, input, block) {
 
     //-----------------SETUP DATA STUFF-----------------
     var data = [[]];
-    var titles = ["participant", "condition", "block", "input", "stimulus", "timestamp", "xmousex",                     "ymousey", "region","region_tested","isAnswer","name_tested","name_answered"];
+    var titles = ["participant", "condition", "block", "input", "stimulus", "timestamp", "xmousex", "ymousey", "region","region_tested","isAnswer","name_tested","name_answered"];
     data.push(titles);
 
     //#TODO: does anything in this file need to change for mouse vs. gaze??
@@ -176,7 +176,7 @@ function drawAssess(stimulus, participant, condition, input, block) {
             break;
             case 13:
             //console.log("ENTER KEY PRESSED");	
-            saveData(data);
+					  saveData(data,block,condition,"test",input,stimulus,participant);
             block = block + 1; //increment the block 		
             window.location.href = "fix.html?participant=" + participant + "&condition=" + condition                + "&block=" + block + "&input=" + input + "&stimulus=" + stimulus;
             break;
