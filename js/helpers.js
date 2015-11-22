@@ -1,7 +1,14 @@
 //----------------------
 ///CALLED ON ENTER KEY PRESS TO DOWLOAD CSV DATA 
 //----------------------
-function saveData(data){
+function saveData(data,block,condition,mode,input,stimulus,participant){
+
+  console.log("participant:" + participant);
+  console.log("condition "+ condition);
+  console.log("block "+ block);
+  console.log("input "+ input);
+  console.log("stimulus "+ stimulus);
+
 	var csvContent = "data:text/csv;charset=utf-8,";
 	data.forEach(function(infoArray, index){
 
@@ -12,9 +19,9 @@ function saveData(data){
 	var encodedUri = encodeURI(csvContent);
 	var link = document.createElement("a");
 	link.setAttribute("href", encodedUri);
-	link.setAttribute("download", "my_data.csv");
+	link.setAttribute("download", "block"+block+"_c"+condition+"_"+mode+"_"+input+"_"+stimulus+"_"+participant+".csv");
 
-	link.click(); // This will download the data file named "my_data.csv".
+	link.click(); // This will download the data file
 
 }
 
