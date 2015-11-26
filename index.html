@@ -17,9 +17,11 @@
    	 	case 13:
         console.log(" ENTER PRESSED");
 				
-				if (document.getElementById("a").value =="" ||         						document.getElementById("b").value != ("1"||"2") ){
-				
+				if (document.getElementById("a").value =="" ||         						(document.getElementById("b").value != "1")&& document.getElementById("b").value != "2") {
 					alert("Please enter name and condition to continue");
+					
+					document.getElementById("consentform").reset();
+					return;
 				}
 				else {
 	        document.getElementById("consentform").submit();
@@ -65,8 +67,6 @@
                 <br/> Condition:
                 <input type="text" id="b" name="condition" required />
                 <br/>
-                <div class="yourCustomDiv" />
-                <input type="submit" style="display:none" />
 
             </form>
 						
