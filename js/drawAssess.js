@@ -201,7 +201,7 @@ function drawAssess(stimulus, participant, condition, input, block) {
 
 			  var row = [participant, condition, block, input, stimulus, Date.now(), point.x, point.y, 
 					parseInt(currRegion), random_order[parseInt(window.sound_num)], answer_key_hit, pics[random_order[parseInt(window.sound_num)]],pics[parseInt(currRegion)]];
-       // console.log(row);
+        // console.log(row);
         data.push(row);			
 	    }
 
@@ -215,10 +215,13 @@ function drawAssess(stimulus, participant, condition, input, block) {
             	update(collider_circles, point, true); 
             	//trigger the next sound
             	
-							window.sound_num = window.sound_num + 1; 
+							if (window.sound_num <8)
+						{ window.sound_num = window.sound_num + 1; 
             	sounds[random_order[window.sound_num]].play();
             	console.log('window.sound_num:', window.sound_num);
-            break;
+						}
+						else {alert("Great Job!  Press ENTER to continue");}
+						break;
             case 13:
             	//console.log("ENTER KEY PRESSED");	
 					  	saveData(data,block,condition,"test",input,stimulus,participant);

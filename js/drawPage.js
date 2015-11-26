@@ -192,7 +192,7 @@ function drawPage(stimulus, participant, condition, input, block) {
         }
         lastRegion = currRegion; //prepare for next update by setting lastRegion = currentRegion
         var row = [participant, condition, block, input, stimulus, parseInt(currRegion), triggered, Date.now(), point.x, point.y,isFix];
-        console.log(row);
+       // console.log(row);
         data.push(row);
     }
 
