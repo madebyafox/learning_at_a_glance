@@ -6,13 +6,43 @@
 html, body { 
 	width:100%; 
 	height:100%; 
+/*	background:black;*/
+	z-index:-1;
+	
 	} /* just to be sure these are full screen*/
+	
+	#wrapper {
+		    width:100%;
+				height:100%;
+		    clear:both;
+/*				background:purple;*/
+				z-index:0;
+				display:block;
+				position:absolute;
+		}
+	
+		table{
+			width:100%;
+			height:100%;
+			border-spacing:0px;
+		}
+		tr{
+			width:100%;
+			height:30%;
+		}
+		td{
+			width:33%;
+			height:33%;
+			text-align: center;
+			vertical-align:center;
+		}
+
 canvas { 
-	display:block; 
-	} /* To remove the scrollbars */
-	
-	
-	
+	display:block;
+	position:absolute;
+	z-index:3;  
+} 
+
 	 #cursor {
     position: absolute;
     width: 50px;

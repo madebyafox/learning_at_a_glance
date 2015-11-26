@@ -6,7 +6,9 @@ function drawPage(stimulus, participant, condition, input, block) {
     var lastRegion = -1; //variable to hold the last region the mouse was in
     var pics = []; //array to store picture objects
     var sounds = []; //array to store audio objects
-    var page = stimulus;
+    var images = [];
+    var places = []; //array to hold background highlights
+		var page = stimulus;
 		var cursor = document.getElementById('cursor');
 		var isFix;
 		
@@ -76,7 +78,7 @@ function drawPage(stimulus, participant, condition, input, block) {
 		
     //-----------------NOW DRAW STUFF----------------
     drawStuff(); //draw the stimuli to the canvas
-
+		
     //----------------------
     //ONLY CALLED IF WINDOW IS RESIZED (AUTOMATICALLY BASED ON EVENT LISTENER)
     //----------------------
@@ -96,21 +98,20 @@ function drawPage(stimulus, participant, condition, input, block) {
         var ncols = 3;
         var radius = 60;
         var counter = 0;
-        var images = {};
         pics = getStimulus(page);
         for (i = 1; i <= nrows; i++) {
             for (z = 1; z <= ncols; z++) {
                 var right = (i / ncols) * winW - (1 / (nrows * 2)) * winW;
                 var down = (z / nrows) * winH - (1 / (ncols * 2)) * winH;
                 var the_point = new SAT.Vector(right, down);
-                drawCircle(right,down,radius); //so we can see the trigger areas
+                places[counter]=drawCircle(right,down,radius); //so we can see the trigger areas
 
                 //now we create an array of collider objects to trigger events from mouse or gaze
                 collider_circles.push(new SAT.Circle(the_point, radius));
                 var end_ix = collider_circles.length - 1;
                 //console.log('collider_circles.length:', i,z);  
 
-                place_stimuli(right, down, pics[counter], images[counter], counter); //place centered image
+                place_stimuli(right, down, pics[counter], counter); //place centered image
                 counter += 1;
             } //end inner for
         } //end outer for
@@ -154,14 +155,14 @@ function drawPage(stimulus, participant, condition, input, block) {
     //----------------------
     //CALLED ONCE TO LOAD EACH IMAGE AND SOUND (BY DRAWSTUFF)
     //----------------------
-    function place_stimuli(px_right, px_down, img_name, base_image, counter) {
-        base_image = new Image();
-        base_image.onload = function () {
-            context.drawImage(base_image, px_right - (this.width / 2), px_down - (this.height / 2));
+    function place_stimuli(px_right, px_down, img_name, counter) {
+        images[counter] = new Image();
+        images[counter].onload = function () {
+            context.drawImage(images[counter], px_right - (this.width / 2), px_down - (this.height / 2));
         }
-        base_image.src = "img/" + page + "/" + img_name + ".png";
-        sounds[counter] = new Audio("img/" + page + "/" + img_name + ".mp3");
-    }
+        images[counter].src = "img/" + page + "/" + img_name + ".png";        
+				sounds[counter] = new Audio("img/" + page + "/" + img_name + ".mp3");	 
+	  }
 
     //----------------------
     ///CALLED EVERY FEW MS BASED ON setInterval 
@@ -172,12 +173,19 @@ function drawPage(stimulus, participant, condition, input, block) {
 
         for (var key in collider_circles) //for each collider 
         {
-            var isColliding = SAT.pointInCircle(point, collider_circles[key]); //is the pointer in it?
+						var isColliding = SAT.pointInCircle(point, collider_circles[key]); //is the pointer in it?
             if (isColliding) //if so
-            {
-                currRegion = key; //set the current region = the collider number
-            }
-        }
+            {                
+								currRegion = key; //set the current region = the collider number
+								console.log(currRegion);
+							  // document.getElementById("d"+key).style.background="red";
+								document.getElementById("d"+key).innerHTML="<img src=img/highlight.png>";
+						}
+						else {
+							document.getElementById("d"+key).innerHTML="";
+						}
+				}
+				
         if (currRegion > -1) //if the current region is not whitespace
         {
             document.title = currRegion; //change doc title 
@@ -186,14 +194,18 @@ function drawPage(stimulus, participant, condition, input, block) {
                 sounds[currRegion].play(); //TRIGGER THE SOUND! YAY!
                 triggered = 1; //note that it was triggered 
             }
-        } else //if the current region IS whitespace
+						
+        } 
+				else //if the current region IS whitespace
         {
-            document.title = "?" //change the title 
+            // document.getElementById(lastRegion).style.display="none";
+						document.title = "?" //change the title 
         }
         lastRegion = currRegion; //prepare for next update by setting lastRegion = currentRegion
+				// document.getElementById(lastRegion).style.display="none";
         var row = [participant, condition, block, input, stimulus, parseInt(currRegion), triggered, Date.now(), point.x, point.y,isFix];
-       // console.log(row);
-        data.push(row);
+        // console.log(row);
+       data.push(row);
     }
 
     //----------------------
