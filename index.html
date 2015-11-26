@@ -3,6 +3,36 @@
 
 <head>
     <link rel="stylesheet" type="text/css" href="css/amystyle.css">
+
+
+<script>
+//----------------------
+///CALLED EVERYTIME A KEY IS PRESSED
+//----------------------
+    window.addEventListener("keydown", doKeyDown, true); //add keyboard key listener
+		
+		function doKeyDown(e) {		
+		
+			switch (e.keyCode) {
+   	 	case 13:
+        console.log(" ENTER PRESSED");
+				
+				if (document.getElementById("a").value =="" ||         						document.getElementById("b").value ==""){
+				
+					alert("Please enter name and condition to continue");
+				}
+				else {
+	        document.getElementById("consentform").submit();
+				}
+				break;
+		   }
+		 }
+
+</script>
+
+
+
+
 </head>
 
 <body>
@@ -28,14 +58,14 @@
 
             <p>If you understand the Informed Consent and agree with its contents, click the corresponding checkbox below. If you wish to terminate your participation, please notify the experimenter, and you may be excused. </p>
 
-            <form method="get" action="instructions.html">
+            <form id="consentform" method="get" action="instructions.html">
 
                 Name:
-                <input type="text" name="participant" />
+                <input type="text" name="participant" required/>
                 <br/> Condition:
-                <input type="text" name="condition" />
+                <input type="text" id="a" name="condition" required />
                 <br/>
-                <input type="hidden" name="block" value=0>
+                <input type="hidden" id="b" name="block" value=0>
                 <div class="yourCustomDiv" />
                 <input type="submit" style="display:none" />
 
