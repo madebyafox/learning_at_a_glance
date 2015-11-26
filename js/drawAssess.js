@@ -34,6 +34,8 @@ function drawAssess(stimulus, participant, condition, input, block) {
 				  gaze_point.x = frame.average.x;
 					gaze_point.y = frame.average.y;
 					isFix = frame.isFixated;
+					var row = frame;
+					console.log(frame);
 				})
 				
 			 	function locateCursor(frame) {
@@ -78,6 +80,8 @@ function drawAssess(stimulus, participant, condition, input, block) {
     var data = [[]];
     var titles = ["participant", "condition", "block", "input", "stimulus", "timestamp", "xmousex", "ymousey", "region","region_tested","isAnswer","name_tested","name_answered"];
     data.push(titles);
+
+		
 
     //-----------------NOW DRAW STUFF----------------
     drawStuff(); //draw the stimuli to the canvas
@@ -197,7 +201,7 @@ function drawAssess(stimulus, participant, condition, input, block) {
 
 			  var row = [participant, condition, block, input, stimulus, Date.now(), point.x, point.y, 
 					parseInt(currRegion), random_order[parseInt(window.sound_num)], answer_key_hit, pics[random_order[parseInt(window.sound_num)]],pics[parseInt(currRegion)]];
-        console.log(row);
+       // console.log(row);
         data.push(row);			
 	    }
 

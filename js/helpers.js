@@ -22,6 +22,7 @@ function saveData(data,block,condition,mode,input,stimulus,participant){
 	link.setAttribute("download", "block"+block+"_c"+condition+"_"+mode+"_"+input+"_"+stimulus+"_"+participant+".csv");
 
 	link.click(); // This will download the data file
+	return;
 
 }
 

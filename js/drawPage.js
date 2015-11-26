@@ -30,6 +30,8 @@ function drawPage(stimulus, participant, condition, input, block) {
 				  gaze_point.x = frame.average.x;
 					gaze_point.y = frame.average.y;
 					isFix = frame.isFixated;
+					console.log(frame);
+					
 				})
 				
 			 	function locateCursor(frame) {
@@ -71,7 +73,7 @@ function drawPage(stimulus, participant, condition, input, block) {
     var titles = ["participant","condition","block","input","stimulus","region","triggered","timestamp","X","Y","Fixation"];
     data.push(titles);
 		//isFix is only populated for mouseGaze blocks
-
+		
     //-----------------NOW DRAW STUFF----------------
     drawStuff(); //draw the stimuli to the canvas
 
@@ -201,8 +203,8 @@ function drawPage(stimulus, participant, condition, input, block) {
 				switch (e.keyCode) {
         case 13:
           //  console.log(" KEY PRESSED");
-            saveData(data,block,condition,"learn",input,stimulus,participant);
-            window.location.href = "assess.html?participant=" + participant + "&condition=" + condition + "&block=" + block + "&input=" + input + "&stimulus=" + stimulus;
+          saveData(data,block,condition,"learn",input,stimulus,participant);
+          window.location.href = "assess.html?participant=" + participant + "&condition=" + condition + "&block=" + block + "&input=" + input + "&stimulus=" + stimulus;
             break;
         }
     }
