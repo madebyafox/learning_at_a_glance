@@ -177,8 +177,17 @@ function drawAssess(stimulus, participant, condition, input, block) {
             case 13:
             //console.log("ENTER KEY PRESSED");	
 					  saveData(data,block,condition,"test",input,stimulus,participant);
-            block = block + 1; //increment the block 		
-            window.location.href = "fix.html?participant=" + participant + "&condition=" + condition                + "&block=" + block + "&input=" + input + "&stimulus=" + stimulus;
+            
+				
+           if (block == 0 && input =="mouse")
+ 						{
+ 							block = 0;
+ 							input="gaze";
+ 						}
+ 						else {
+ 							block = block + 1;
+ 						} //increment the block
+            window.location.href = "blockstart.html?participant=" + participant + "&condition=" + condition                + "&block=" + block + "&input=" + input + "&stimulus=" + stimulus;
             break;
         }
     }
