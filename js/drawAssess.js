@@ -8,24 +8,71 @@ function drawAssess(stimulus, participant, condition, input, block) {
     var random_order = []; //random order for subjects
     var sounds = []; //array to store audio objects
     var page = stimulus;
+		var cursor = document.getElementById('cursor');
 
-    //-----------------HOUSEKEEPING---------------------
+		var point = new SAT.Vector(0,0); //placeholder vector for superset of mouse and eyes
+   
+	 
+    //-----------------HANDLE GAZE CONDITION------------
+		if (input =='gaze'){
+	  		var clientOrigin = {
+	  		  left: window.screenLeft,
+	  		  top: window.screenTop
+	  		} //not sure why we need to do this
+
+				var gaze_point = new SAT.Vector(0,0); //declare vector to contain gaze coords
+				console.log("SET TO GAZEPOINT");
+				
+			  setInterval(function () { //call the update with gaze_point as input
+					point = gaze_point;
+						update(collider_circles, gaze_point);
+		    }, 100); //set the logging interval
+
+	  		EyeTribe.loop(function(frame){
+	  		  // dump.innerHTML = frame.dump();
+					locateCursor(frame);	 
+				  gaze_point.x = frame.average.x;
+					gaze_point.y = frame.average.y;
+					isFix = frame.isFixated;
+				})
+				
+			 	function locateCursor(frame) {
+	  		    locateElement(cursor, frame.average);
+	  		}
+	  		function locateElement(element, position)
+				{
+	  		  element.style.display = 'block';
+	  		  element.style.left = (position.x - clientOrigin.left - element.clientWidth / 2) + 'px';
+	  		  element.style.top = (position.y - clientOrigin.top - element.clientHeight / 2) + 'px';
+	  		}
+					
+		}
+    //-----------------HANDLE MOUSE CONDITION-----------
+		else //ONLY display the eyes in the gaze condition
+		{
+    	cursor.style.display = 'none';
+
+	    //-----------------SETUP MOUSE STUFF-----------------
+	    var mouse_point = new SAT.Vector(0, 0); //declare a vector to contain the mouse coordinates
+	    document.onmousemove = function (mouse) { //define what happens when the mouse moves
+	        mouse_point.x = mouse.clientX;
+	        mouse_point.y = mouse.clientY;
+	    };
+
+		  setInterval(function () {
+				point = mouse_point;
+	        update(collider_circles, mouse_point);
+	    }, 100); //set the logging interval
+
+		}
+	 
+	 	 
+	 
+	  //-----------------HOUSEKEEPING---------------------
     // resize the canvas to fill browser window dynamically
     window.addEventListener('resize', resizeCanvas, false); 
     window.addEventListener("keydown", doKeyDown, true); //add keyboard key listener
     
-    //NEXT: if gaze, then hide cursor and display cursor icon according to gaze
-    //OR, if osx has gae control, we might be able to use that
-    setInterval(function () {
-        update(collider_circles, mouse_point);
-    }, 100); //set the logging interval
-    
-    //-----------------SETUP MOUSE STUFF-----------------
-    var mouse_point = new SAT.Vector(0, 0); //declare a vector to contain the mouse coordinates
-    document.onmousemove = function (mouse){ //define what happens when the mouse moves
-            mouse_point.x = mouse.clientX;
-            mouse_point.y = mouse.clientY;
-        };
 
     //-----------------SETUP DATA STUFF-----------------
     var data = [[]];
@@ -121,35 +168,34 @@ function drawAssess(stimulus, participant, condition, input, block) {
     //----------------------
     ///CALLED EVERY FEW MS BASED ON setInterval 
     //----------------------
-    function update(collider_circles, mouse_point) {
-        var currRegion = -1; //reset the current region to null on each update
-       
+    function update(collider_circles, point) {
+        var currRegion = -1; //reset the current region to null on each update   
 
         //SET currRegion TO COLLIDER THAT POINT IS IN
 				for (var key in collider_circles) //for each collider 
         {
             //is the pointer in it?
-            var isColliding = SAT.pointInCircle(mouse_point, collider_circles[key]);
+            var isColliding = SAT.pointInCircle(point, collider_circles[key]);
             if (isColliding) //if so
             {
                 currRegion = key; //set the current region = the collider number
             }
         }
         document.title = currRegion; //change doc title
-				
+				var answer_key_hit;
 				
         if(arguments.length === 3 )
 				{
-					var answer_key_hit = 1;
+					 answer_key_hit = 1;
 				}
 				else {
-				  var answer_key_hit = '';
+				   answer_key_hit = '';
 				}
 
         lastRegion = currRegion; //prepare for next update by setting lastRegion = currentRegion
        
 
-			  var row = [participant, condition, block, input, stimulus, Date.now(), mouse_point.x,mouse_point.y, 
+			  var row = [participant, condition, block, input, stimulus, Date.now(), point.x, point.y, 
 					parseInt(currRegion), random_order[parseInt(window.sound_num)], answer_key_hit, pics[random_order[parseInt(window.sound_num)]],pics[parseInt(currRegion)]];
         console.log(row);
         data.push(row);			
@@ -162,7 +208,7 @@ function drawAssess(stimulus, participant, condition, input, block) {
         switch (e.keyCode) {
             case 32:
             	//get the region
-            	update(collider_circles, mouse_point, true); //region logged as an answer
+            	update(collider_circles, point, true); 
             	//trigger the next sound
             	
 							window.sound_num = window.sound_num + 1; 

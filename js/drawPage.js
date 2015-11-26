@@ -25,7 +25,7 @@ function drawPage(stimulus, participant, condition, input, block) {
 		    }, 100); //set the logging interval
 
 	  		EyeTribe.loop(function(frame){
-	  		  dump.innerHTML = frame.dump();
+	  		  // dump.innerHTML = frame.dump();
 					locateCursor(frame);	 
 				  gaze_point.x = frame.average.x;
 					gaze_point.y = frame.average.y;
