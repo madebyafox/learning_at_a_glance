@@ -178,7 +178,6 @@ function drawPage(stimulus, participant, condition, input, block) {
             {                
 								currRegion = key; //set the current region = the collider number
 								console.log(currRegion);
-							  // document.getElementById("d"+key).style.background="red";
 								document.getElementById("d"+key).innerHTML="<img src=img/highlight.png>";
 						}
 						else {

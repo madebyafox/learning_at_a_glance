@@ -183,7 +183,11 @@ function drawAssess(stimulus, participant, condition, input, block) {
             if (isColliding) //if so
             {
                 currRegion = key; //set the current region = the collider number
+								document.getElementById("d"+key).innerHTML="<img src=img/highlight.png>";
             }
+						else{
+							document.getElementById("d"+key).innerHTML="";
+						}
         }
         document.title = currRegion; //change doc title
 				var answer_key_hit;
