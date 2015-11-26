@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	  <script src = "js/helpers.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/amystyle.css">
+
+<script>
+//----------------------
+///CALLED EVERYTIME A KEY IS PRESSED
+//----------------------
+    window.addEventListener("keydown", doKeyDown, true); //add keyboard key listener
+		
+		function doKeyDown(e) {		
+		
+			switch (e.keyCode) {
+   	 	case 13:
+       	console.log(" ENTER PRESSED");
+        window.location.href = "blockstart.html?participant="+getQueryVariable("participant")+"&condition="+getQueryVariable("condition")+"&block="+0+"&input=mouse";
+//        
+				break;
+		   }
+		 }
+
+</script>
+
+
+
+
+
+</head>
+
+<body>
+    <div class="center">
+
+        <div class="top">
+            <h3>Instructions</h3>
+        </div>
+        <!--top!-->
+        <div class="box">
+            <p>Thank you for volunteering to participate in our research</p>
+         
+            <p>INSERT INSTRUCTION VIDEO HERE </p>
+
+         
+
+        </div>
+        <!--center!-->
+
+				
+    </div>
+</body>
+
+</html>
