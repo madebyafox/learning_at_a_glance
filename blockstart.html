@@ -12,72 +12,166 @@
   align-items: center; height: 500px;
   width: 100%;" >
             <h3 id ="title"> </h3>
+						<h3 id ="exercise"></h3>
+						<h3 id ="input"></h3>
 						</div>
-            <p style="text-align: center;     font-style: italic;
-">Press ENTER to continue</p>
+            <p style="text-align: center; font-style: italic;">Press ENTER to continue</p>
         
 </body>
 
 <script>
-	
+			
 			window.addEventListener("keydown", doKeyDown, true); //add keyboard key listener
-	
-	
-			//DECLARE GLOBAL VARS
-			var currblock = parseInt(getQueryVariable("block"));
-			var input = getQueryVariable("input");
-			var next = "";
-	    var mouseInst = new Audio("img/instructions/mouse.mp3"); 
-	    var gazeInst = new Audio("img/instructions/gaze.mp3"); 
+
+			var title=""; //placeholder for title text
+			var exercise = ""; //placeholder for exercise text
+
+			var mouseInst = new Audio("img/instructions/mouse.mp3"); //instructions for mouse training block 0
+	    var gazeInst = new Audio("img/instructions/gaze.mp3"); //instructions for gaze training block 0
 			
-			console.log(currblock);
-			console.log(input);
-
-			switch (currblock){
-				
-			case 0: 
-				
-				if (input=="mouse"){
-					mouseInst.play();
-					document.getElementById("title").innerHTML="FIRST... let's practice with the MOUSE";	
-
-				}
-				else if (input =="gaze"){
-					gazeInst.play();
-					document.getElementById("title").innerHTML="NOW... let's practice with your EYES";
-				}
-				
-	 		 next = "fix.html?participant="+getQueryVariable("participant")+"&condition="+getQueryVariable("condition")+"&block="+getQueryVariable("block")+"&input="+getQueryVariable("input");
-				
-				break; 
+	
+			var condition = parseInt(getQueryVariable("condition")); //get the condition from the querystring
+			var lastBlock = parseInt(getQueryVariable("block")); //get the last block from the querystring
+			var input = getQueryVariable("input"); //get the input var from the querystring //used only for logic on determining input for block 0
+		
+	    
+			var nextBlock = getBlock(lastBlock,input); //decide what the next block to be executed is;
+			var stimulus = getStimulus(nextBlock); //get the next stimulus based on the block
+			var nextInput = getInput(nextBlock,condition); //get the next input baed on the block and condition
 			
-			case 1:
-				break;
-			case 2:
-				break;
-			case 3:
-				break;
-			case 4:
-				break;
+			//SET DISPLAY INSTRUCTIONS
+			document.getElementById("title").innerHTML=title;
+			document.getElementById("exercise").innerHTML=exercise;
+			document.getElementById("input").innerHTML="&nbspnavigating by "+nextInput;
 
+			var next = "stimulus.html?participant="+getQueryVariable("participant")+"&condition="+condition+"&block="+nextBlock+"&stimulus="+stimulus+"&input="+nextInput;
+			
+			//AWESOME SUPER FUNCTIONS OF AWESOMENESS : note : not actually SUPER functions
+			function getBlock (block, input)
+			{
+				if (block == 0) //handle the training trials
+				{
+					if (input==""){
+						return 0;
+					}
+					else if (input =="mouse"){
+						return 0;
+					}
+					else if(input =="gaze"){
+						return 1;
+					}
+				}
+				else if (block ==4)
+					{						window.location.href="debrief.html";}//redirect to debrief
+
+				else { //otherwise increment by 1
+					return (block + 1); 
+				}	
 			}
-	
-	//----------------------
-	///CALLED EVERYTIME A KEY IS PRESSED
-	//----------------------
-	function doKeyDown(e) {
-		switch (e.keyCode) {
-			case 13:
-				console.log(" ENTER PRESSED");
-				window.location.href =next;
-				break;
+
+			function getStimulus(block)
+			{
+				switch (block){
+				case 0:
+					title = "Let's practice ";
+					exercise ="";
+					return "training";
+					break;
+				case 1: 
+					title = "";
+					exercise ="#1: flags - "
+					return "flags";
+					break;
+				case 2:
+					title = "";
+					exercise ="#2: fish - "				
+					return "fish";
+					break;
+				case 3:
+					title = "";
+					exercise ="#3: poinsonous mushrooms - "
+					return "mushrooms";
+					break;
+				case 4:
+					title = "";
+					exercise ="#4: viruses - "
+					return "viruses";
+					break;
+				}
+			}
+
+			function getInput(block,condition)
+			{
+				if (condition == 1)
+				{
+				    switch (block)
+				    {
+				        case 0:
+										if (input == ""){
+											mouseInst.play();
+											return "mouse"
+										}
+										if (input == "mouse"){
+											gazeInst.play();
+											return "gaze";
+										}
+									break;
+								case 1:
+									return "gaze";
+									break;
+								case 2:
+									return "mouse";
+									break;
+								case 3:
+									return "gaze";
+									break;
+								case 4: 
+									return "mouse";
+									break;
+						}
+				}
+				else if (condition == 2)
+				{
+						 switch (block)
+						    {
+						        case 0:
+												if (input == ""){return "mouse";}
+												if (input == "mouse"){return "gaze";}
+											break;
+										case 1:
+											return "mouse";
+											break;
+										case 2:
+											return "gaze";
+											break;
+										case 3:
+											return "mouse";
+											break;
+										case 4: 
+											return "gaze";
+											break;
+								}
+					}
+			}
+										
+			//----------------------
+			///CALLED EVERYTIME A KEY IS PRESSED
+			//----------------------
+			function doKeyDown(e) {
+				switch (e.keyCode) {
+					case 13:
+						console.log(" ENTER PRESSED");
+						window.location.href=next;
+						break;
 			
-			case  32:
-				mouseInst.pause();
-				gazeInst.pause();
-				break;
-		}
-	}
-				
+					case  32:
+						mouseInst.pause();
+						gazeInst.pause();
+						break;
+				}
+			}							
+										
+
 </script>
 </html>
+
