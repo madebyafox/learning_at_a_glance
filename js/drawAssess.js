@@ -32,16 +32,10 @@ function drawAssess(stimulus, participant, condition, input, block) {
     var titles = ["participant", "condition", "block", "input", "stimulus", "timestamp", "xmousex", "ymousey", "region","region_tested","isAnswer","name_tested","name_answered"];
     data.push(titles);
 
-    //#TODO: does anything in this file need to change for mouse vs. gaze??
-
     //-----------------NOW DRAW STUFF----------------
     drawStuff(); //draw the stimuli to the canvas
-    window.sound_num = random_order[0];//
-    sounds[window.sound_num].play();
-    
-    //document.title = parseInt(window.sound_num);
-    //play_shuffled_sounds();
-    //sounds[0].play();
+    window.sound_num = 0; //set the assessment counter to 0
+    sounds[random_order[window.sound_num]].play(); //play the first sound in the random_order_list
     
     //----------------------
     //ONLY CALLED IF WINDOW IS RESIZED (AUTOMATICALLY BASED ON EVENT LISTENER)
@@ -88,25 +82,25 @@ function drawAssess(stimulus, participant, condition, input, block) {
     //----------------------
     function getStimulus(stimulus) {
         switch (stimulus) {
-        case "fish":
-            pics = ["cod", "haddock", "halibut", "herring", "lesser.weaver", "mackeral", "monkfish",                     "salmon", "scab"];
-            random_order = [0,1,2,3,4,5,6,7,8];
+        case "training":
+            pics = ["elephant", "monkey", "cow","sheep", "zebra" , "hippopotamus",  "goat","penguin","cat"];
+            random_order = [1,4,3,8,6,0,2,5,7];//TODO manually randomize random order     
             break;
-        case "flags":
-            pics = ["cameroon", "malawi", "morocco", "mozambique", "namibia", "rwanda", "senegal",                       "tanzania", "zambia"];
-            random_order = [0,1,2,3,4,5,6,7,8];
+	      case "flags":
+	          pics = ["rwanda","senegal",  "namibia","malawi","mozambique","morocco", "zambia","cameroon",   "tanzania" ];
+	          random_order = [8,1,4,3,7,0,6,5,2]; 
+	          break;
+        case "fish":
+            pics = ["lesser.weaver","monkfish", "scab", "herring","salmon","cod",  "mackeral",  "haddock", "halibut",];
+            random_order = [1,4,3,8,6,0,2,5,7];
             break;
         case "mushrooms":
-            pics = ["cortinar", "deadly.fibercap", "death.cap", "destroying.angel", "fly.agaric",                         "ivory.funnel", "livid.enteloma", "sulfur.tuft", "yellow.staining"];
-            random_order = [0,1,2,3,4,5,6,7,8];    
+            pics = ["sulfur.tuft","livid.enteloma", "deadly.fibercap", "death.cap", "ivory.funnel",  "fly.agaric",  "cortinar","yellow.staining","destroying.angel",];
+            random_order = [0,3,8,5,7,1,4,6,2];    
             break;
         case "viruses":
-            pics = ["coronavirus", "filovirus", "hantavirus", "hepatitusvirus", "herpesvirus",                           "mastadenovirus", "rabiesvirus", "rhinovirus", "smallpoxvirus"];
-            random_order = [0,1,2,3,4,5,6,7,8];     
-            break;
-        case "training":
-            pics = ["cat", "cow", "elephant", "goat", "hippopotamus", "monkey", "penguin", "sheep",                       "zebra"];
-            random_order = [0,1,2,3,4,5,6,7,8];//TODO manually randomize random order     
+            pics = ["herpesvirus","hantavirus","coronavirus",   "hepatitusvirus", "smallpoxvirus",  "rhinovirus","mastadenovirus", "rabiesvirus","filovirus"];
+            random_order = [8,1,4,3,7,0,6,5,2];     
             break;
         }
         return pics;
@@ -127,11 +121,12 @@ function drawAssess(stimulus, participant, condition, input, block) {
     //----------------------
     ///CALLED EVERY FEW MS BASED ON setInterval 
     //----------------------
-    function update(collider_circles, mouse_point,isAnswer) {
+    function update(collider_circles, mouse_point) {
         var currRegion = -1; //reset the current region to null on each update
-        var triggered = 0; //reset the trigger to null on each update
+       
 
-        for (var key in collider_circles) //for each collider 
+        //SET currRegion TO COLLIDER THAT POINT IS IN
+				for (var key in collider_circles) //for each collider 
         {
             //is the pointer in it?
             var isColliding = SAT.pointInCircle(mouse_point, collider_circles[key]);
@@ -140,26 +135,25 @@ function drawAssess(stimulus, participant, condition, input, block) {
                 currRegion = key; //set the current region = the collider number
             }
         }
-        if (currRegion > -1){ //& (e.keycode === 17)){ //if the current region is not whitespace
-            //document.title = currRegion; //change doc title 
-            //would trig sound here
-                if(arguments.length === 3 & isAnswer) {  
-                //play next sound
-                    var answer_key_hit = 1;
-                }
-                else {
-                    var answer_key_hit = '';
-                }
-            
-        } else //if the current region IS whitespace
-        {
-            //document.title = "?"; //change the title 
-        }
+        document.title = currRegion; //change doc title
+				
+				
+        if(arguments.length === 3 )
+				{
+					var answer_key_hit = 1;
+				}
+				else {
+				  var answer_key_hit = '';
+				}
+
         lastRegion = currRegion; //prepare for next update by setting lastRegion = currentRegion
-        var row = [participant, condition, block, input, stimulus, Date.now(), mouse_point.x,                            mouse_point.y, parseInt(currRegion), parseInt(window.sound_num), answer_key_hit,                      pics[parseInt(window.sound_num)],pics[parseInt(currRegion)]];
-        //console.log(row);
-        data.push(row);
-    }
+       
+
+			  var row = [participant, condition, block, input, stimulus, Date.now(), mouse_point.x,mouse_point.y, 
+					parseInt(currRegion), random_order[parseInt(window.sound_num)], answer_key_hit, pics[random_order[parseInt(window.sound_num)]],pics[parseInt(currRegion)]];
+        console.log(row);
+        data.push(row);			
+	    }
 
     //----------------------
     ///CALLED EVERYTIME A KEY IS PRESSED 
@@ -167,17 +161,18 @@ function drawAssess(stimulus, participant, condition, input, block) {
     function doKeyDown(e) {                
         switch (e.keyCode) {
             case 32:
-            //get the region
-            update(collider_circles, mouse_point, true); //region logged as an answer
-            //trigger the next sound
-            window.sound_num = window.sound_num + 1; 
-            sounds[window.sound_num].play();
-            console.log('window.sound_num:', window.sound_num);
+            	//get the region
+            	update(collider_circles, mouse_point, true); //region logged as an answer
+            	//trigger the next sound
+            	
+							window.sound_num = window.sound_num + 1; 
+            	sounds[random_order[window.sound_num]].play();
+            	console.log('window.sound_num:', window.sound_num);
             break;
             case 13:
-            //console.log("ENTER KEY PRESSED");	
-					  saveData(data,block,condition,"test",input,stimulus,participant);
-            window.location.href = "blockstart.html?participant=" + participant + "&condition=" + condition                + "&block=" + block + "&input=" + input + "&stimulus=" + stimulus;
+            	//console.log("ENTER KEY PRESSED");	
+					  	saveData(data,block,condition,"test",input,stimulus,participant);
+            	window.location.href = "blockstart.html?participant=" + participant + "&condition=" + condition + "&block=" + block + "&input=" + input + "&stimulus=" + stimulus;
             break;
         }
     }
