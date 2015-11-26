@@ -6,11 +6,11 @@
 
 
 <script>
+    window.addEventListener("keydown", doKeyDown, true); //add keyboard key listener
+		
 //----------------------
 ///CALLED EVERYTIME A KEY IS PRESSED
 //----------------------
-    window.addEventListener("keydown", doKeyDown, true); //add keyboard key listener
-		
 		function doKeyDown(e) {		
 		
 			switch (e.keyCode) {

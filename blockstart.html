@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src = "js/helpers.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/amystyle.css">
+	
+</head>
+
+<body>
+    <div style="display: flex;
+  justify-content: center;
+  align-items: center; height: 500px;
+  width: 100%;" >
+            <h3 id ="title"> </h3>
+						</div>
+            <p style="text-align: center;     font-style: italic;
+">Press ENTER to continue</p>
+        
+</body>
+
+<script>
+	
+			window.addEventListener("keydown", doKeyDown, true); //add keyboard key listener
+	
+	
+			//DECLARE GLOBAL VARS
+			var currblock = parseInt(getQueryVariable("block"));
+			var input = getQueryVariable("input");
+			var next = "";
+	    var mouseInst = new Audio("img/instructions/mouse.mp3"); 
+	    var gazeInst = new Audio("img/instructions/gaze.mp3"); 
+			
+			console.log(currblock);
+			console.log(input);
+
+			switch (currblock){
+				
+			case 0: 
+				
+				if (input=="mouse"){
+					mouseInst.play();
+					document.getElementById("title").innerHTML="FIRST... let's practice with the MOUSE";	
+
+				}
+				else if (input =="gaze"){
+					gazeInst.play();
+					document.getElementById("title").innerHTML="NOW... let's practice with your EYES";
+				}
+				
+	 		 next = "fix.html?participant="+getQueryVariable("participant")+"&condition="+getQueryVariable("condition")+"&block="+getQueryVariable("block")+"&input="+getQueryVariable("input");
+				
+				break; 
+			
+			case 1:
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			case 4:
+				break;
+
+			}
+	
+	//----------------------
+	///CALLED EVERYTIME A KEY IS PRESSED
+	//----------------------
+	function doKeyDown(e) {
+		switch (e.keyCode) {
+			case 13:
+				console.log(" ENTER PRESSED");
+				window.location.href =next;
+				break;
+			
+			case  32:
+				mouseInst.pause();
+				gazeInst.pause();
+				break;
+		}
+	}
+				
+</script>
+</html>
