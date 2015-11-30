@@ -8,9 +8,9 @@ function drawPage(stimulus, participant, condition, input, block) {
     var sounds = []; //array to store audio objects
     var images = [];
     var places = []; //array to hold background highlights
-		var page = stimulus;
-		var cursor = document.getElementById('cursor');
-		var isFix;
+	var page = stimulus;
+	var cursor = document.getElementById('cursor');
+	var isFix;
 		
     //-----------------HANDLE GAZE CONDITION------------
 		if (input =='gaze'){
@@ -41,9 +41,11 @@ function drawPage(stimulus, participant, condition, input, block) {
 	  		}
 	  		function locateElement(element, position)
 				{
-	  		  element.style.display = 'block';
-	  		  element.style.left = (position.x - clientOrigin.left - element.clientWidth / 2) + 'px';
-	  		  element.style.top = (position.y - clientOrigin.top - element.clientHeight / 2) + 'px';
+					
+					//COMMENTED OUT TO REMOVE CURSOR ON GAZE
+	  		  //element.style.display = 'block';
+	  		  //element.style.left = (position.x - clientOrigin.left - element.clientWidth / 2) + 'px';
+	  		 // element.style.top = (position.y - clientOrigin.top - element.clientHeight / 2) + 'px';
 	  		}
 					
 		}
@@ -96,7 +98,12 @@ function drawPage(stimulus, participant, condition, input, block) {
         var winH = window.innerHeight;
         var nrows = 3;
         var ncols = 3;
-        var radius = 60;
+		if (input == 'gaze'){
+	        var radius = 200;
+		}
+		else {
+			var radius = 60;
+		}
         var counter = 0;
         pics = getStimulus(page);
         for (i = 1; i <= nrows; i++) {
@@ -104,7 +111,7 @@ function drawPage(stimulus, participant, condition, input, block) {
                 var right = (i / ncols) * winW - (1 / (nrows * 2)) * winW;
                 var down = (z / nrows) * winH - (1 / (ncols * 2)) * winH;
                 var the_point = new SAT.Vector(right, down);
-                places[counter]=drawCircle(right,down,radius); //so we can see the trigger areas
+               // places[counter]=drawCircle(right,down,radius); //so we can see the trigger areas
 
                 //now we create an array of collider objects to trigger events from mouse or gaze
                 collider_circles.push(new SAT.Circle(the_point, radius));

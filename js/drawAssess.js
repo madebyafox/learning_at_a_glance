@@ -8,10 +8,8 @@ function drawAssess(stimulus, participant, condition, input, block) {
     var random_order = []; //random order for subjects
     var sounds = []; //array to store audio objects
     var page = stimulus;
-		var cursor = document.getElementById('cursor');
-
-		var point = new SAT.Vector(0,0); //placeholder vector for superset of mouse and eyes
-   
+	var cursor = document.getElementById('cursor');
+	var point = new SAT.Vector(0,0); //placeholder vector for superset of mouse and eyes
 	 
     //-----------------HANDLE GAZE CONDITION------------
 		if (input =='gaze'){
@@ -42,12 +40,12 @@ function drawAssess(stimulus, participant, condition, input, block) {
 	  		    locateElement(cursor, frame.average);
 	  		}
 	  		function locateElement(element, position)
-				{
-	  		  element.style.display = 'block';
-	  		  element.style.left = (position.x - clientOrigin.left - element.clientWidth / 2) + 'px';
-	  		  element.style.top = (position.y - clientOrigin.top - element.clientHeight / 2) + 'px';
-	  		}
-					
+				{		
+			//COMMENTED OUT TO REMOVE GAZE CURSOR	
+	  		//  element.style.display = 'block';
+	  		//  element.style.left = (position.x - clientOrigin.left - element.clientWidth / 2) + 'px';
+	  		//  element.style.top = (position.y - clientOrigin.top - element.clientHeight / 2) + 'px';
+	  		}		
 		}
     //-----------------HANDLE MOUSE CONDITION-----------
 		else //ONLY display the eyes in the gaze condition
@@ -67,21 +65,16 @@ function drawAssess(stimulus, participant, condition, input, block) {
 	    }, 100); //set the logging interval
 
 		}
-	 
-	 	 
-	 
-	  //-----------------HOUSEKEEPING---------------------
+	  
+	//-----------------HOUSEKEEPING---------------------
     // resize the canvas to fill browser window dynamically
     window.addEventListener('resize', resizeCanvas, false); 
     window.addEventListener("keydown", doKeyDown, true); //add keyboard key listener
     
-
     //-----------------SETUP DATA STUFF-----------------
     var data = [[]];
     var titles = ["participant", "condition", "block", "input", "stimulus", "timestamp", "xmousex", "ymousey", "region","region_tested","isAnswer","name_tested","name_answered"];
-    data.push(titles);
-
-		
+    data.push(titles);	
 
     //-----------------NOW DRAW STUFF----------------
     drawStuff(); //draw the stimuli to the canvas
@@ -105,7 +98,12 @@ function drawAssess(stimulus, participant, condition, input, block) {
         var winH = window.innerHeight;
         var nrows = 3;
         var ncols = 3;
-        var radius  = 60;
+		if (input == 'gaze'){
+	        var radius = 200;
+		}
+		else {
+			var radius = 60;
+		}
         var counter = 0;
         var images  = {};
         pics = getStimulus(page);
@@ -114,7 +112,7 @@ function drawAssess(stimulus, participant, condition, input, block) {
                 var right = (i / ncols) * winW - (1 / (nrows * 2)) * winW;
                 var down = (z / nrows) * winH - (1 / (ncols * 2)) * winH;
                 var the_point = new SAT.Vector(right, down);
-                //drawCircle(right,down,radius); //so we can see the trigger areas
+              //  drawCircle(right,down,radius); //so we can see the trigger areas
 
                 //now we create an array of collider objects to trigger events from mouse or gaze
                 collider_circles.push(new SAT.Circle(the_point, radius));
@@ -126,6 +124,17 @@ function drawAssess(stimulus, participant, condition, input, block) {
                 counter += 1;
             } //end inner for
         } //end outer for
+    }
+
+    //----------------------
+    //DEBUGGING HELPER FOR DRAWING COLLIDER CIRCLES
+    //----------------------
+    function drawCircle(px_right,px_down,radius){
+        var c=document.getElementById("canvas");
+        var ctx=c.getContext("2d");
+        ctx.beginPath();
+        ctx.arc(px_right,px_down,radius,0,2*Math.PI);
+        ctx.stroke();
     }
 
     //----------------------
