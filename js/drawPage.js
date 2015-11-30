@@ -95,11 +95,11 @@ function drawPage(stimulus, participant, condition, input, block) {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         var winW = window.innerWidth;
-        var winH = window.innerHeight;
+        var winH = window.innerHeight;   
         var nrows = 3;
         var ncols = 3;
 		if (input == 'gaze'){
-	        var radius = 200;
+	        var radius = 220;
 		}
 		else {
 			var radius = 60;

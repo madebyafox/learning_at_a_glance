@@ -27,7 +27,7 @@
 			var exercise = ""; //placeholder for exercise text
 
 			var mouseInst = new Audio("img/instructions/mouse.mp3"); //instructions for mouse training block 0
-	    var gazeInst = new Audio("img/instructions/gaze.mp3"); //instructions for gaze training block 0
+	    	var gazeInst = new Audio("img/instructions/gaze.mp3"); //instructions for gaze training block 0
 			
 	
 			var condition = parseInt(getQueryVariable("condition")); //get the condition from the querystring
@@ -135,8 +135,12 @@
 						 switch (block)
 						    {
 						        case 0:
-												if (input == ""){return "mouse";}
-												if (input == "mouse"){return "gaze";}
+											if (input == ""){
+												mouseInst.play();
+												return "mouse";}
+											if (input == "mouse"){
+												gazeInst.play();
+												return "gaze";}
 											break;
 										case 1:
 											return "mouse";
