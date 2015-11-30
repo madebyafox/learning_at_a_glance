@@ -42,9 +42,9 @@ function drawAssess(stimulus, participant, condition, input, block) {
 	  		function locateElement(element, position)
 				{		
 			//COMMENTED OUT TO REMOVE GAZE CURSOR	
-	  		 element.style.display = 'block';
- 	  		 element.style.left = (position.x - clientOrigin.left - element.clientWidth / 2) + 'px';
- 	  		 element.style.top = (position.y - clientOrigin.top - element.clientHeight / 2) + 'px';
+	  		 // element.style.display = 'block';
+ // 	  		 element.style.left = (position.x - clientOrigin.left - element.clientWidth / 2) + 'px';
+ // 	  		 element.style.top = (position.y - clientOrigin.top - element.clientHeight / 2) + 'px';
 	  		}		
 		}
     //-----------------HANDLE MOUSE CONDITION-----------
