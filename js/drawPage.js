@@ -88,7 +88,7 @@ function drawPage(stimulus, participant, condition, input, block) {
         drawStuff(); //redraw the content if the window is resized
     }
 
-    //----------------------
+    //------------------------
     //CALLED ONCE ON PAGE LOAD + ON EVERY RESIZE
     //----------------------
     function drawStuff() {
