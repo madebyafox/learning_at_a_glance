@@ -16,21 +16,44 @@ library("scales")
 library("saccades")
 data_dir = "C:\\Users\\me\\Google Drive\\classes_meetings\\HCI_f2015\\Ataglance\\CODE\\learning_at_a_glance\\data"
 subjects = c('Colleen', 'Jeremy', 'Riz', 'Tricia', 'Wes')
+learn_test = c('*learn*','*test*')
 
 # load in all csv files
-for (s in 1:length(subjects)){
-  csvlist = list.files(path=paste(data_dir, subjects[s], sep="\\") ,pattern='*learn*')
-  for (i in 1:length(csvlist)){
-    tmp = read.csv(paste(data_dir, subjects[s], csvlist[i], sep="\\"));
-    if (s == 1 & i == 1) {
-      all_data = tmp;
-    } else {
-      all_data = rbind(all_data,tmp) # combine csvs into one
+for (lt in 1:2) {
+  for (s in 1:length(subjects)){
+    csvlist = list.files(path=paste(data_dir, subjects[s], sep="\\") ,pattern=learn_test[lt])
+    for (i in 1:length(csvlist)){
+      tmp = read.csv(paste(data_dir, subjects[s], csvlist[i], sep="\\"));
+      if (s == 1 & i == 1) {
+        all_data = tmp;
+      } else {
+        all_data = rbind(all_data,tmp) # combine csvs into one
+      }
     }
   }
+  if (lt == 1){
+    learn_data = all_data;
+  } else {
+    test_data = all_data;
+  }
 }
-# summary(all_data)
-# just_eyedata = data.frame(x=all_data$xmousex,y=all_data$ymousey,
+
+answer_data = subset(test_data,isAnswer==1)
+ggplot(data = answer_data, aes(xmousex, ymousey, label=region)) + geom_point() + geom_text(size=10)
+
+
+
+
+# ggplot(data=fx, aes(x = x, y = y,color=dur,size=dur)) +
+#   geom_point() + 
+#   scale_colour_gradientn(colours = rev(rainbow(20)))
+
+
+
+#filter NA
+# all_data = subset(all_data,Fixation =='true')
+# 
+# just_eyedata = data.frame(x=all_data$X,y=all_data$Y,
 #                 time=seq.int(1, nrow(all_data)),trial=rep.int(1, nrow(all_data)))
 # fx = detect.fixations(just_eyedata,lambda = 15)
 # diagnostic.plot(just_eyedata, fx)
@@ -38,7 +61,7 @@ for (s in 1:length(subjects)){
 # ggplot(data=fx, aes(x = x, y = y,color=dur,size=dur)) +
 #   geom_point() + 
 #   scale_colour_gradientn(colours = rev(rainbow(20)))
-# 
+
 # ggplot(data=all_data, aes(x = xmousex, y = ymousey,color=seq.int(1, nrow(all_data)))) +
 #   geom_point() + scale_colour_gradientn(colours = rainbow(10))
 
