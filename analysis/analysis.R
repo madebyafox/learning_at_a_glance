@@ -1,14 +1,6 @@
-## TODO: ##
-# learning effects and split half
-# lmer slow on variable slope
-# accuracy goes up faster in the color condition
-
-## NOTES ##
-#S15 did best in black in 1st and second half. Actually better with black. Lots of eye fatiue/blinking.
 require(ggplot2)
 library(plyr)
 library('binom')
-#library('languageR')
 library('lme4')
 library('arm')
 library('sjPlot') #good package for plotting lmer
@@ -38,11 +30,45 @@ for (lt in 1:2) {
   }
 }
 
-answer_data = subset(test_data,isAnswer==1)
-ggplot(data = answer_data, aes(xmousex, ymousey, label=region)) + geom_point() + geom_text(size=10)
+answer_data = subset(test_data,isAnswer==1 & region >=0 )
+answer_data$isCorrect = mapply(function(x,y) x == y,answer_data$region,answer_data$region_tested)
 
+#################################ACCURACY###########################################
+#plot accuracy per subject
+accuracy <- ddply(answer_data, c('stimulus','input','participant'), summarise,
+                  acc = mean(isCorrect==1),
+                  CI  = 1.96*sqrt(mean(isCorrect==1)*(1-mean(isCorrect==1))/length(isCorrect)))
+ggplot(data=accuracy, aes(x = stimulus, y = acc,fill=input)) + 
+  geom_bar(stat="identity", position=position_dodge()) + 
+  geom_errorbar(aes(ymax=acc+CI, ymin=acc-CI), position="dodge") +
+  facet_grid(. ~ participant)
 
+#plot accuracy over subjects and stimuli
+accuracy <- ddply(answer_data, c('stimulus','input'), summarise,
+                  acc = mean(isCorrect==1),
+                  CI  = 1.96*sqrt(mean(isCorrect==1)*(1-mean(isCorrect==1))/length(isCorrect)))
+ggplot(data=accuracy, aes(x = stimulus, y = acc,fill=input)) + 
+  geom_bar(stat="identity", position=position_dodge()) + 
+  geom_errorbar(aes(ymax=acc+CI, ymin=acc-CI), position="dodge")
 
+#plot accuracy over subjects
+accuracy <- ddply(answer_data, c('input'), summarise,
+                  acc = mean(isCorrect==1),
+                  CI  = 1.96*sqrt(mean(isCorrect==1)*(1-mean(isCorrect==1))/length(isCorrect)))
+ggplot(data=accuracy, aes(x = input, y = acc)) + 
+  geom_bar(stat="identity", position=position_dodge()) + 
+  geom_errorbar(aes(ymax=acc+CI, ymin=acc-CI), position="dodge")
+
+#################################LEARNING TIME###########################################
+ddply(learn_data, .(timestamp), summarise,
+      Temp = mean (Temp),
+      minTemp = min(Temp))
+
+learning_time <- ddply(answer_data, c('input', 'participant', 'stimulus'), summarise,
+                  total_time = (max(timestamp) - min(timestamp))/1000)
+
+ggplot(data=learning_time, aes(x = stimulus, y = total_time, fill= input)) + 
+geom_bar(stat="identity", position=position_dodge())
 
 # ggplot(data=fx, aes(x = x, y = y,color=dur,size=dur)) +
 #   geom_point() + 
