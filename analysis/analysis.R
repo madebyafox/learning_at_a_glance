@@ -15,21 +15,26 @@ library('sjPlot') #good package for plotting lmer
 library("scales")
 library("saccades")
 
-# load in all csv files
-csvlist = list.files(pattern="*learn.csv")
-for (i in 1:length(csvlist)){
-  tmp = read.csv(csvlist[i]);
-  #tmp$subjID = rep(substring(csvlist[i],1,3),times=nrow(tmp)); # add subjid to every row
-  
-  #tmp = rbind(colorstim,blackstim)
-  
-  if (i == 1) {
-    all_data = tmp;
-  } else {
-    all_data = rbind(all_data,tmp) # combine csvs into one
-  }
-} #TODO make trial_number useful for analysis
+data_dir = 'C:\Users\me\Google Drive\classes_meetings\HCI_f2015\Ataglance\CODE\learning_at_a_glance\data'
+subjects = c('Colleen', 'Jeremy', 'Riz', 'Tricia', 'Wes')
 
+
+# load in all csv files
+for (s in 1:length(subjects))
+  csvlist = list.files(pattern="*learn.csv")
+  for (i in 1:length(csvlist)){
+    tmp = read.csv(csvlist[i]);
+    #tmp$subjID = rep(substring(csvlist[i],1,3),times=nrow(tmp)); # add subjid to every row
+    
+    #tmp = rbind(colorstim,blackstim)
+    
+    if (i == 1) {
+      all_data = tmp;
+    } else {
+      all_data = rbind(all_data,tmp) # combine csvs into one
+    }
+  }
+}
 summary(all_data)
 just_eyedata = data.frame(x=all_data$xmousex,y=all_data$ymousey,
                 time=seq.int(1, nrow(all_data)),trial=rep.int(1, nrow(all_data)))
