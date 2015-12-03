@@ -14,39 +14,33 @@ library('arm')
 library('sjPlot') #good package for plotting lmer
 library("scales")
 library("saccades")
-
-data_dir = 'C:\Users\me\Google Drive\classes_meetings\HCI_f2015\Ataglance\CODE\learning_at_a_glance\data'
+data_dir = "C:\\Users\\me\\Google Drive\\classes_meetings\\HCI_f2015\\Ataglance\\CODE\\learning_at_a_glance\\data"
 subjects = c('Colleen', 'Jeremy', 'Riz', 'Tricia', 'Wes')
 
-
 # load in all csv files
-for (s in 1:length(subjects))
-  csvlist = list.files(pattern="*learn.csv")
+for (s in 1:length(subjects)){
+  csvlist = list.files(path=paste(data_dir, subjects[s], sep="\\") ,pattern='*learn*')
   for (i in 1:length(csvlist)){
-    tmp = read.csv(csvlist[i]);
-    #tmp$subjID = rep(substring(csvlist[i],1,3),times=nrow(tmp)); # add subjid to every row
-    
-    #tmp = rbind(colorstim,blackstim)
-    
-    if (i == 1) {
+    tmp = read.csv(paste(data_dir, subjects[s], csvlist[i], sep="\\"));
+    if (s == 1 & i == 1) {
       all_data = tmp;
     } else {
       all_data = rbind(all_data,tmp) # combine csvs into one
     }
   }
 }
-summary(all_data)
-just_eyedata = data.frame(x=all_data$xmousex,y=all_data$ymousey,
-                time=seq.int(1, nrow(all_data)),trial=rep.int(1, nrow(all_data)))
-fx = detect.fixations(just_eyedata,lambda = 15)
-diagnostic.plot(just_eyedata, fx)
-
-ggplot(data=fx, aes(x = x, y = y,color=dur,size=dur)) +
-  geom_point() + 
-  scale_colour_gradientn(colours = rev(rainbow(20)))
-
-ggplot(data=all_data, aes(x = xmousex, y = ymousey,color=seq.int(1, nrow(all_data)))) +
-  geom_point() + scale_colour_gradientn(colours = rainbow(10))
+# summary(all_data)
+# just_eyedata = data.frame(x=all_data$xmousex,y=all_data$ymousey,
+#                 time=seq.int(1, nrow(all_data)),trial=rep.int(1, nrow(all_data)))
+# fx = detect.fixations(just_eyedata,lambda = 15)
+# diagnostic.plot(just_eyedata, fx)
+# 
+# ggplot(data=fx, aes(x = x, y = y,color=dur,size=dur)) +
+#   geom_point() + 
+#   scale_colour_gradientn(colours = rev(rainbow(20)))
+# 
+# ggplot(data=all_data, aes(x = xmousex, y = ymousey,color=seq.int(1, nrow(all_data)))) +
+#   geom_point() + scale_colour_gradientn(colours = rainbow(10))
 
 # ## Aggregrate data for plotting
 # #ss = subset(all_data,rej_trial==0)
