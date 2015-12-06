@@ -1,0 +1,114 @@
+{\rtf1\ansi\deff0 {\fonttbl {\f0 Times New Roman;}}
+{\pard Table XX \par}
+{\pard  \par}
+{\pard\i Means and standard deviations for total_time as a function of a 4(stimulus) X 2(input) design\par}
+{\pard  \par}
+{
+\trowd \trgaph100
+\clbrdrt\brdrw15\brdrs
+\clvertalc\cellx1835 
+\clbrdrt\brdrw15\brdrs
+\clvertalc\cellx6732 
+\pard\sa100\sb100\intbl\qr{ }\cell
+\pard\sa100\sb100\intbl\qc{input}\cell
+\row
+}
+{
+\trowd \trgaph100
+\clvertalc\cellx1835 
+\clbrdrt\brdrw15\brdrs
+\clvertalc\cellx4284 
+\clbrdrt\brdrw15\brdrs
+\clvertalc\cellx6732 
+\pard\sa100\sb100\intbl\qr{ }\cell
+\pard\sa100\sb100\intbl\qc{mouse}\cell
+\pard\sa100\sb100\intbl\qc{gaze}\cell
+\row
+}
+{
+\trowd \trgaph100
+\clbrdrt\brdrw15\brdrs
+\clvertalc\cellx1835 
+\clbrdrt\brdrw15\brdrs
+\clvertalc\cellx3060 
+\clbrdrt\brdrw15\brdrs
+\clvertalc\cellx4284 
+\clbrdrt\brdrw15\brdrs
+\clvertalc\cellx5508 
+\clbrdrt\brdrw15\brdrs
+\clvertalc\cellx6732 
+\pard\sa100\sb100\intbl\qr{stimulus}\cell
+\pard\sa100\sb100\intbl\qc{{\i M}}\cell
+\pard\sa100\sb100\intbl\qc{{\i SD}}\cell
+\pard\sa100\sb100\intbl\qc{{\i M}}\cell
+\pard\sa100\sb100\intbl\qc{{\i SD}}\cell
+\row
+}
+{
+\trowd \trgaph100
+\clbrdrt\brdrw15\brdrs
+\clvertalc\cellx1835 
+\clbrdrt\brdrw15\brdrs
+\clvertalc\cellx3060 
+\clbrdrt\brdrw15\brdrs
+\clvertalc\cellx4284 
+\clbrdrt\brdrw15\brdrs
+\clvertalc\cellx5508 
+\clbrdrt\brdrw15\brdrs
+\clvertalc\cellx6732 
+\pard\sa100\sb100\intbl\qr{flags}\cell
+\pard\sa100\sb100\intbl\tqdec\tldot\tx428{107.16}\cell
+\pard\sa100\sb100\intbl\tqdec\tldot\tx428{63.17}\cell
+\pard\sa100\sb100\intbl\tqdec\tldot\tx428{102.15}\cell
+\pard\sa100\sb100\intbl\tqdec\tldot\tx428{69.05}\cell
+\row
+}
+{
+\trowd \trgaph100
+\clvertalc\cellx1835 
+\clvertalc\cellx3060 
+\clvertalc\cellx4284 
+\clvertalc\cellx5508 
+\clvertalc\cellx6732 
+\pard\sa100\sb100\intbl\qr{fish}\cell
+\pard\sa100\sb100\intbl\tqdec\tldot\tx428{112.38}\cell
+\pard\sa100\sb100\intbl\tqdec\tldot\tx428{64.17}\cell
+\pard\sa100\sb100\intbl\tqdec\tldot\tx428{62.19}\cell
+\pard\sa100\sb100\intbl\tqdec\tldot\tx428{45.04}\cell
+\row
+}
+{
+\trowd \trgaph100
+\clvertalc\cellx1835 
+\clvertalc\cellx3060 
+\clvertalc\cellx4284 
+\clvertalc\cellx5508 
+\clvertalc\cellx6732 
+\pard\sa100\sb100\intbl\qr{mushrooms}\cell
+\pard\sa100\sb100\intbl\tqdec\tldot\tx428{72.81}\cell
+\pard\sa100\sb100\intbl\tqdec\tldot\tx428{36.32}\cell
+\pard\sa100\sb100\intbl\tqdec\tldot\tx428{97.55}\cell
+\pard\sa100\sb100\intbl\tqdec\tldot\tx428{53.74}\cell
+\row
+}
+{
+\trowd \trgaph100
+\clbrdrb\brdrw15\brdrs
+\clvertalc\cellx1835 
+\clbrdrb\brdrw15\brdrs
+\clvertalc\cellx3060 
+\clbrdrb\brdrw15\brdrs
+\clvertalc\cellx4284 
+\clbrdrb\brdrw15\brdrs
+\clvertalc\cellx5508 
+\clbrdrb\brdrw15\brdrs
+\clvertalc\cellx6732 
+\pard\sa100\sb100\intbl\qr{viruses}\cell
+\pard\sa100\sb100\intbl\tqdec\tldot\tx428{112.93}\cell
+\pard\sa100\sb100\intbl\tqdec\tldot\tx428{47.18}\cell
+\pard\sa100\sb100\intbl\tqdec\tldot\tx428{66.90}\cell
+\pard\sa100\sb100\intbl\tqdec\tldot\tx428{30.49}\cell
+\row
+}
+{\pard \par}{\pard{\i Note.} {\i M} and {\i SD} represent mean and standard deviation, respectively.\par}
+}
