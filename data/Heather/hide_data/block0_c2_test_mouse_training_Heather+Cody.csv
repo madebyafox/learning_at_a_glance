@@ -1,0 +1,4 @@
+
+participant,condition,block,input,stimulus,timestamp,xmousex,ymousey,region,region_tested,isAnswer,name_tested,name_answered
+Heather+Cody,2,0,mouse,training,1449174860605,0,0,-1,1,,monkey,
+Heather+Cody,2,0,mouse,training,1449174860705,1140,393,-1,1,,monkey,

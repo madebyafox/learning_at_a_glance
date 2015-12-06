@@ -6,7 +6,7 @@ library('arm')
 library('sjPlot') #good package for plotting lmer
 library("scales")
 library("saccades")
-data_dir = "C:\\Users\\me\\Google Drive\\classes_meetings\\HCI_f2015\\Ataglance\\CODE\\learning_at_a_glance\\data"
+data_dir = "C:\\Users\\me\\Google Drive\\Ataglance\\CODE\\learning_at_a_glance\\data"
 subjects = c('Colleen', 'Jeremy', 'Riz', 'Tricia', 'Wes')
 learn_test = c('*learn*','*test*')
 
