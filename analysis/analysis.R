@@ -136,6 +136,10 @@ print(ggplot(data=diff, aes(x = acc_increase, y = speedup)) +
 )
 }
 
+################### user feedback ##########################
+
+
+
 
 # ggplot(data=fx, aes(x = x, y = y,color=dur,size=dur)) +
 #   geom_point() + 
