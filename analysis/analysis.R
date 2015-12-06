@@ -73,7 +73,7 @@ apa.2way.table(stimulus,input,total_time,learning_time,filename=paste(analysis_d
 
 ggplot(data=learning_time, aes(x = stimulus, y = total_time,fill=input)) + 
   geom_bar(stat="identity", position=position_dodge()) + 
-  facet_grid(. ~ participant)
+  facet_grid(. ~ participant)# +   theme(legend.position="none")
 
 ggplot(data=learning_time, aes(x = stimulus, y = total_time, fill=input)) + 
   geom_bar(stat="identity", position=position_dodge()) 
@@ -130,10 +130,12 @@ print(ggplot(data=diff, aes(x = acc_increase, y = speedup)) +
   ylim(c(-50,100)) +
   xlim(c(-.6,.6))  + 
   scale_color_manual(breaks = c(1:5),
-  values=c("red", "red", "black","green","green"),limits = c(1:5))
-  )
+  values=c("green","green4", "black", "red4", "red"),limits = c(1:5)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0)  +
+  theme(text = element_text(size=30),legend.position="none")
+)
 }
-  
+
 
 # ggplot(data=fx, aes(x = x, y = y,color=dur,size=dur)) +
 #   geom_point() + 
