@@ -59,7 +59,9 @@ accuracy <- ddply(answer_data, c('input'), summarise,
                   CI  = 1.96*sqrt(mean(isCorrect==1)*(1-mean(isCorrect==1))/length(isCorrect)))
 ggplot(data=accuracy, aes(x = input, y = acc)) + 
   geom_bar(stat="identity", position=position_dodge()) + 
-  geom_errorbar(aes(ymax=acc+CI, ymin=acc-CI), position="dodge")
+geom_errorbar(aes(ymax=acc+CI, ymin=acc-CI), position="dodge")
+
+apa.d.table(input,acc,accuracy,filename=paste(analysis_dir,'input_accuracy_d_table.doc',sep='\\'))
 
 #################################LEARNING TIME###########################################
 learning_time <- ddply(learn_data, c('input', 'participant', 'stimulus'),summarise,
@@ -73,18 +75,12 @@ ggplot(data=learning_time, aes(x = stimulus, y = total_time,fill=input)) +
   geom_bar(stat="identity", position=position_dodge()) + 
   facet_grid(. ~ participant)
 
-ddply(learning_time,interaction('input','stimulus'),summarise,mean=mean(total_time),sd=sd(total_time))
-
 ggplot(data=learning_time, aes(x = stimulus, y = total_time, fill=input)) + 
   geom_bar(stat="identity", position=position_dodge()) 
-sjt.xtab(learning_time$total_time,
-         learning_time$stimus,
-         learning_time$input)
-ggplot(data=learning_time, aes(x = stimulus, y = total_time, fill= input)) + 
-  geom_bar()
 
-learning_time <- ddply(answer_data, c('input', 'participant'), summarise,
-                       total_time = (max(timestamp) - min(timestamp))/1000)
+apa.d.table(input,total_time,learning_time,filename=paste(analysis_dir,'input_learningtime_d_table.doc',sep='\\'))
+
+ggplot(data=learning_time, aes(x = stimulus, y = total_time, fill= input)) + geom_bar()
 
 ggplot(data=learning_time, aes(x = input, y = total_time, fill= input)) + 
   stat_boxplot(geom ='errorbar')+
@@ -105,8 +101,6 @@ trigs <- ddply(learn_data, c('input', 'participant'), summarise,
 trigs <- ddply(trigs, 'participant', summarise,
                trig_increase = trig_total[input=='gaze']-trig_total[input=='mouse'])
 
-learning_time <- ddply(answer_data, c('input', 'participant'), summarise,
-                       total_time = (max(timestamp) - min(timestamp))/1000)
 time_diff <- ddply(learning_time, 'participant', summarise,
                    speedup = total_time[input=='mouse']-total_time[input=='gaze'])
 
@@ -123,7 +117,7 @@ ggplot(data=diff, aes(x = acc_increase, y = speedup)) +
 
 #gaze faster? 
 vars2plot = c('mouse_more_enjoyable','mouse_faster','mouse_preference','mouse_easier')
-vars2title = c('Which more ENJOYABLE?','Which is FASTER?','Which would YOU USE?','Which is EASIER?')
+vars2title = c('Which was more ENJOYABLE?','Which was FASTER?','Which would YOU USE?','Which was EASIER?')
 
 for (lt in 1:length(vars2plot)) {
 labels = c('g','g','=','m','m')
@@ -132,9 +126,11 @@ print(ggplot(data=diff, aes(x = acc_increase, y = speedup)) +
   theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
   labs(y="Gaze Speed Up (Seconds)", x="Gaze Accuracy Improvements", title=paste("Gaze Benefit:",vars2title[lt])) +
   geom_text(data=diff, aes(acc_increase, speedup, 
-  label=labels[get(vars2plot[lt])],color=participant), size=30) +
-  ylim(c(-60,60)) +
-  xlim(c(-.6,.6))  
+  label=labels[get(vars2plot[lt])],color=as.factor(get(vars2plot[lt]))), size=30) +
+  ylim(c(-50,100)) +
+  xlim(c(-.6,.6))  + 
+  scale_color_manual(breaks = c(1:5),
+  values=c("red", "red", "black","green","green"),limits = c(1:5))
   )
 }
   
