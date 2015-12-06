@@ -6,8 +6,9 @@ library('arm')
 library('sjPlot') #good package for plotting lmer
 library("scales")
 library("saccades")
-data_dir = "C:\\Users\\me\\Google Drive\\Ataglance\\CODE\\learning_at_a_glance\\data"
-subjects = c('Colleen', 'Jeremy', 'Riz', 'Tricia', 'Wes')
+library('boot')
+data_dir = "C:\\Users\\me\\Google Drive\\learning_at_a_glance\\data"
+subjects = c('Colleen', 'Jeremy', 'Tricia', 'Wes','Matt','Tim','Heather','Kelly','Anja')
 learn_test = c('*learn*','*test*')
 
 # load in all csv files
@@ -60,15 +61,48 @@ ggplot(data=accuracy, aes(x = input, y = acc)) +
   geom_errorbar(aes(ymax=acc+CI, ymin=acc-CI), position="dodge")
 
 #################################LEARNING TIME###########################################
-ddply(learn_data, .(timestamp), summarise,
-      Temp = mean (Temp),
-      minTemp = min(Temp))
-
 learning_time <- ddply(answer_data, c('input', 'participant', 'stimulus'), summarise,
                   total_time = (max(timestamp) - min(timestamp))/1000)
 
 ggplot(data=learning_time, aes(x = stimulus, y = total_time, fill= input)) + 
-geom_bar(stat="identity", position=position_dodge())
+  stat_boxplot(geom ='errorbar')+
+  geom_boxplot() + geom_point(position = "jitter")
+
+learning_time <- ddply(answer_data, c('input', 'participant'), summarise,
+                       total_time = (max(timestamp) - min(timestamp))/1000)
+
+ggplot(data=learning_time, aes(x = input, y = total_time, fill= input)) + 
+  stat_boxplot(geom ='errorbar')+
+  geom_boxplot() + geom_point(position = "jitter",size=10,alpha=.5)
+  #TODO: add boot conf from website
+
+#mouse-gaze acc by mouse-gaze time
+acc_diff <- ddply(answer_data, c('input','participant'), summarise,
+                  acc = mean(isCorrect==1)
+                  )
+acc_diff <- ddply(acc_diff, 'participant', summarise,
+                  acc_increase = acc[input=='gaze']-acc[input=='mouse']
+)
+
+#number of triggers
+trigs <- ddply(learn_data, c('input', 'participant'), summarise,
+               trig_total = sum(triggered))
+trigs <- ddply(trigs, 'participant', summarise,
+               trig_increase = trig_total[input=='gaze']-trig_total[input=='mouse'])
+
+learning_time <- ddply(answer_data, c('input', 'participant'), summarise,
+                       total_time = (max(timestamp) - min(timestamp))/1000)
+time_diff <- ddply(learning_time, 'participant', summarise,
+                   speedup = total_time[input=='mouse']-total_time[input=='gaze'])
+
+diff = merge(acc_diff,time_diff,by='participant')
+diff = merge(diff,trigs,by='participant')
+
+ggplot(data=diff, aes(x = acc_increase, y = speedup)) + 
+  geom_point() +
+  theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
+  labs(y="Gaze Speed Up (Seconds)", x="Gaze Accuracy Improvements", title="Gaze Benefit") +
+  geom_text(data=diff, aes(acc_increase, speedup, label=round(trig_increase),color=participant), size=30)
 
 # ggplot(data=fx, aes(x = x, y = y,color=dur,size=dur)) +
 #   geom_point() + 
