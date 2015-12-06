@@ -1,18 +1,16 @@
-install.packages(c('ggplot2','plyr','binom','boot'))
-
-
 library('ggplot2')
 library('plyr')
-#library('binom')
-#library('lme4')
-#library('arm')
-#library('sjPlot') #good package for plotting lmer
-#library("scales")
-#library("saccades")
+library('binom')
+library('lme4')
+library('arm')
+library('sjPlot') #good package for plotting lmer
+library("scales")
+library("saccades")
 library('boot')
 data_dir = "C:\\Users\\me\\Desktop\\learning_at_a_glance\\data"
 subjects = c('Colleen', 'Jeremy', 'Tricia', 'Wes','Matt','Tim','Heather','Kelly','Anja','Steph')
 learn_test = c('*learn*','*test*')
+survey_data = read.csv(paste(data_dir, 'survey_data.csv', sep="\\"));
 
 # load in all csv files
 for (lt in 1:2) {
@@ -100,12 +98,30 @@ time_diff <- ddply(learning_time, 'participant', summarise,
 
 diff = merge(acc_diff,time_diff,by='participant')
 diff = merge(diff,trigs,by='participant')
+diff = merge(diff,survey_data,by='participant')
 
+#trigs as text
 ggplot(data=diff, aes(x = acc_increase, y = speedup)) + 
   geom_point() +
   theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
   labs(y="Gaze Speed Up (Seconds)", x="Gaze Accuracy Improvements", title="Gaze Benefit") +
   geom_text(data=diff, aes(acc_increase, speedup, label=round(trig_increase),color=participant), size=30)
+
+#gaze faster? 
+vars2plot = c('mouse_more_enjoyable','mouse_faster','mouse_preference','mouse_easier')
+for (lt in vars2plot) {
+labels = c('g','g','=','m','m')
+print(ggplot(data=diff, aes(x = acc_increase, y = speedup)) + 
+  geom_point() +
+  theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
+  labs(y="Gaze Speed Up (Seconds)", x="Gaze Accuracy Improvements", title=paste("Gaze Benefit",lt)) +
+  geom_text(data=diff, aes(acc_increase, speedup, 
+  label=labels[get(lt)],color=participant), size=30) +
+  ylim(c(-60,60)) +
+  xlim(c(-.6,.6))  
+  )
+}
+  
 
 # ggplot(data=fx, aes(x = x, y = y,color=dur,size=dur)) +
 #   geom_point() + 
