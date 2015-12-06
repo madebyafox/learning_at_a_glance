@@ -1,14 +1,17 @@
-require(ggplot2)
-library(plyr)
-library('binom')
-library('lme4')
-library('arm')
-library('sjPlot') #good package for plotting lmer
-library("scales")
-library("saccades")
+install.packages(c('ggplot2','plyr','binom','boot'))
+
+
+library('ggplot2')
+library('plyr')
+#library('binom')
+#library('lme4')
+#library('arm')
+#library('sjPlot') #good package for plotting lmer
+#library("scales")
+#library("saccades")
 library('boot')
-data_dir = "C:\\Users\\me\\Google Drive\\learning_at_a_glance\\data"
-subjects = c('Colleen', 'Jeremy', 'Tricia', 'Wes','Matt','Tim','Heather','Kelly','Anja')
+data_dir = "C:\\Users\\me\\Desktop\\learning_at_a_glance\\data"
+subjects = c('Colleen', 'Jeremy', 'Tricia', 'Wes','Matt','Tim','Heather','Kelly','Anja','Steph')
 learn_test = c('*learn*','*test*')
 
 # load in all csv files
