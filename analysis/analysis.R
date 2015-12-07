@@ -57,15 +57,29 @@ ggplot(data=accuracy, aes(x = stimulus, y = acc,fill=input)) +
 accuracy <- ddply(answer_data, c('input'), summarise,
                   acc = mean(isCorrect==1),
                   CI  = 1.96*sqrt(mean(isCorrect==1)*(1-mean(isCorrect==1))/length(isCorrect)))
-ggplot(data=accuracy, aes(x = input, y = acc)) + 
-  geom_bar(stat="identity", position=position_dodge()) + 
-geom_errorbar(aes(ymax=acc+CI, ymin=acc-CI), position="dodge")
+
+ggplot(data=accuracy, aes(x = input, y = acc,fill=input)) + 
+  scale_fill_manual(name = "", values = c("#83bbe5","#b491b5")) +
+  geom_bar(stat="identity", position=position_dodge()) + #+ 
+  scale_color_manual(values=c("#b491b5","#83bbe5" )) +
+  coord_cartesian(ylim=c(.6,.8)) +
+  labs(y="Accuracy", x="Input", title=paste("Learning Effectiveness",'')) +
+  theme(text = element_text(size=35),legend.position="none") +
+  ggsave(filename = paste(analysis_dir,'\\','overall_acc','.png',sep=''),height=20,width=20,units='cm')
+
+
+chisq.test(answer_data$isCorrect)
 
 apa.d.table(input,acc,accuracy,filename=paste(analysis_dir,'input_accuracy_d_table.doc',sep='\\'))
 
 #################################LEARNING TIME###########################################
 learning_time <- ddply(learn_data, c('input', 'participant', 'stimulus'),summarise,
                   total_time = (max(timestamp) - min(timestamp))/1000)
+
+lm1 = lm(total_time ~ input,data=learning_time)
+lm2 = lm(total_time ~ input:stimulus,data=learning_time)
+anova(lm2)
+
 
 subset(answer_data,input=='gaze'& participant=='MattMMIL',stimulus='flags')
 
@@ -101,19 +115,30 @@ trigs <- ddply(learn_data, c('input', 'participant'), summarise,
 trigs <- ddply(trigs, 'participant', summarise,
                trig_increase = trig_total[input=='gaze']-trig_total[input=='mouse'])
 
-time_diff <- ddply(learning_time, 'participant', summarise,
+
+just_input_participant = ddply(learning_time,c('input','participant'),summarise,
+                               total_time = sum(total_time))
+time_diff <- ddply(just_input_participant, 'participant', summarise,
                    speedup = total_time[input=='mouse']-total_time[input=='gaze'])
 
 diff = merge(acc_diff,time_diff,by='participant')
 diff = merge(diff,trigs,by='participant')
 diff = merge(diff,survey_data,by='participant')
 
-#trigs as text
+#plot just scatter to start
 ggplot(data=diff, aes(x = acc_increase, y = speedup)) + 
-  geom_point() +
+  geom_point(size=10) +
   theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
-  labs(y="Gaze Speed Up (Seconds)", x="Gaze Accuracy Improvements", title="Gaze Benefit") +
-  geom_text(data=diff, aes(acc_increase, speedup, label=round(trig_increase),color=participant), size=30)
+  labs(y="Gaze Speed Up (Seconds)", x="Gaze Accuracy Improvements", title=paste("Gaze Benefit",'')) +
+  ylim(c(-60,120)) +
+  xlim(c(-.6,.6))  + 
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0)  +
+  theme(text = element_text(size=35),legend.position="none")
+  ggsave(filename = paste(analysis_dir,'\\','just_dots','.png',sep=''),height=20,width=30,units='cm')
+
+library(schoRsch)
+t_out(t.test(diff$speedup, data = diff))
+t_out(t.test(diff$acc_increase, data = diff))
 
 #gaze faster? 
 vars2plot = c('mouse_more_enjoyable','mouse_faster','mouse_preference','mouse_easier')
@@ -121,25 +146,34 @@ vars2title = c('Which was more ENJOYABLE?','Which was FASTER?','Which would YOU 
 
 for (lt in 1:length(vars2plot)) {
 labels = c('g','g','=','m','m')
-print(ggplot(data=diff, aes(x = acc_increase, y = speedup)) + 
+ggplot(data=diff, aes(x = acc_increase, y = speedup)) + 
   geom_point() +
   theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
   labs(y="Gaze Speed Up (Seconds)", x="Gaze Accuracy Improvements", title=paste("Gaze Benefit:",vars2title[lt])) +
   geom_text(data=diff, aes(acc_increase, speedup, 
   label=labels[get(vars2plot[lt])],color=as.factor(get(vars2plot[lt]))), size=30) +
-  ylim(c(-50,100)) +
+  ylim(c(-60,120)) +
   xlim(c(-.6,.6))  + 
   scale_color_manual(breaks = c(1:5),
-  values=c("green","green4", "black", "red4", "red"),limits = c(1:5)) +
+  values=c("#83bbe5", "#83bbe5","black", "#b491b5","#b491b5" ),limits = c(1:5)) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0)  +
-  theme(text = element_text(size=30),legend.position="none")
-)
+  theme(text = element_text(size=35),legend.position="none")
+  ggsave(filename = paste(analysis_dir,'\\',vars2plot[lt],'.png',sep=''),height=20,width=30,units='cm')
 }
 
 ################### user feedback ##########################
+str(survey_data)
+library(reshape2)
+user_feedback = survey_data[c(vars2plot,c('participant'))]
+user_feedback = melt(user_feedback, id.vars = "participant", measure.vars = c(vars2plot))
 
+apa.1way.table(variable,value,user_feedback,filename=paste(analysis_dir,'user_feedback_apatable.doc',sep='\\'))
+#apa.d.table(input,acc,accuracy,filename=paste(analysis_dir,'survey_d_table.doc',sep='\\'))
 
-
+t.test(survey_data$mouse_more_enjoyable, mu = 3)
+t.test(survey_data$mouse_faster, mu = 3)
+t.test(survey_data$mouse_preference, mu = 3)
+t.test(survey_data$mouse_easier, mu = 3)
 
 # ggplot(data=fx, aes(x = x, y = y,color=dur,size=dur)) +
 #   geom_point() + 
@@ -317,3 +351,4 @@ print(ggplot(data=diff, aes(x = acc_increase, y = speedup)) +
 # invlogit(fixef(color_model)[1]+fixef(color_model)[3]+fixef(color_model)[4])-invlogit(fixef(color_model)[1]+fixef(color_model)[2])
 # 
 # #TODO PREDICT()
+    
