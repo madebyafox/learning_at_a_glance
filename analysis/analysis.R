@@ -59,7 +59,7 @@ accuracy <- ddply(answer_data, c('input'), summarise,
                   CI  = 1.96*sqrt(mean(isCorrect==1)*(1-mean(isCorrect==1))/length(isCorrect)))
 
 ggplot(data=accuracy, aes(x = input, y = acc,fill=input)) + 
-  scale_fill_manual(name = "", values = c("#83bbe5","#b491b5")) +
+  scale_fill_manual(name = "", values = c("#b491b5","#83bbe5")) +
   geom_bar(stat="identity", position=position_dodge()) + #+ 
   scale_color_manual(values=c("#b491b5","#83bbe5" )) +
   coord_cartesian(ylim=c(.6,.8)) +
@@ -68,26 +68,25 @@ ggplot(data=accuracy, aes(x = input, y = acc,fill=input)) +
   ggsave(filename = paste(analysis_dir,'\\','overall_acc','.png',sep=''),height=20,width=20,units='cm')
 
 
-chisq.test(answer_data$isCorrect)
 
 apa.d.table(input,acc,accuracy,filename=paste(analysis_dir,'input_accuracy_d_table.doc',sep='\\'))
 
 #################################LEARNING TIME###########################################
-learning_time <- ddply(learn_data, c('input', 'participant', 'stimulus'),summarise,
+learning_time <- ddply(learn_data, c('input','participant','stimulus'),summarise,
                   total_time = (max(timestamp) - min(timestamp))/1000)
-
-lm1 = lm(total_time ~ input,data=learning_time)
-lm2 = lm(total_time ~ input:stimulus,data=learning_time)
-anova(lm2)
-
-
-subset(answer_data,input=='gaze'& participant=='MattMMIL',stimulus='flags')
+learning_time = ddply(learning_time,c('input'),summarise,mean=mean(total_time))
 
 apa.2way.table(stimulus,input,total_time,learning_time,filename=paste(analysis_dir,'learningtime_apatable.doc',sep='\\'))
 
-ggplot(data=learning_time, aes(x = stimulus, y = total_time,fill=input)) + 
-  geom_bar(stat="identity", position=position_dodge()) + 
-  facet_grid(. ~ participant)# +   theme(legend.position="none")
+ggplot(data=learning_time, aes(x = input, y = mean,fill=input)) + 
+  scale_fill_manual(name = "", values = c("#b491b5","#83bbe5")) +
+  geom_bar(stat="identity", position=position_dodge()) + #+ 
+  scale_color_manual(values=c("#b491b5","#83bbe5" )) +
+  coord_cartesian(ylim=c(80,105)) +
+  labs(y="Learning Time", x="Input", title=paste("Learning Time",'')) +
+  theme(text = element_text(size=35),legend.position="none") +
+  ggsave(filename = paste(analysis_dir,'\\','overall_speed','.png',sep=''),height=20,width=20,units='cm')
+
 
 ggplot(data=learning_time, aes(x = stimulus, y = total_time, fill=input)) + 
   geom_bar(stat="identity", position=position_dodge()) 
@@ -95,7 +94,6 @@ ggplot(data=learning_time, aes(x = stimulus, y = total_time, fill=input)) +
 apa.d.table(input,total_time,learning_time,filename=paste(analysis_dir,'input_learningtime_d_table.doc',sep='\\'))
 
 ggplot(data=learning_time, aes(x = stimulus, y = total_time, fill= input)) + geom_bar()
-
 ggplot(data=learning_time, aes(x = input, y = total_time, fill= input)) + 
   stat_boxplot(geom ='errorbar')+
   geom_boxplot() + geom_point(position = "jitter",size=10,alpha=.5)
